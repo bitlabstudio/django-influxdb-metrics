@@ -56,7 +56,7 @@ influxdb_get_memory_usage
 Collects the total memory of your user, plus the memory and name of the largest
 process.
 
-You can run it like this:
+You can run it like this::
 
     ./manage.py influxdb_get_memory_usage
     ./manage.py influxdb_get_memory_usage username
