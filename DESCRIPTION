@@ -1,0 +1,1 @@
+A reusable Django app that sends metrics about your project to InfluxDB

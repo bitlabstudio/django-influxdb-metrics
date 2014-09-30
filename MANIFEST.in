@@ -1,0 +1,9 @@
+include AUTHORS
+include LICENSE
+include DESCRIPTION
+include CHANGELOG.txt
+include README.md
+graft influxdb_metrix
+global-exclude *.orig *.pyc *.log *.swp
+prune influxdb_metrix/tests/coverage
+prune influxdb_metrix/.ropeproject
