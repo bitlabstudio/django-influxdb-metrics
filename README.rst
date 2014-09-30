@@ -90,7 +90,7 @@ shared hosting environment this would probably be your home folder.
 
 You could schedule it like this::
 
-    * * * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_disk_usage $HOME > $HOME/mylogs/cron/influxdb-get-disk-usage.log 2>&1
+    0 */1 * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_disk_usage $HOME > $HOME/mylogs/cron/influxdb-get-disk-usage.log 2>&1
 
 The series created in your influxdb will be named
 ``<prefix>server.disk.usage<postfix>`` and will have the following columns:
@@ -113,7 +113,7 @@ a password for this user.
 
 You could schedule it like this::
 
-    * * * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_database_size $HOME > $HOME/mylogs/cron/influxdb-get-database-size.log 2>&1
+    0 */1 * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_database_size $HOME > $HOME/mylogs/cron/influxdb-get-database-size.log 2>&1
 
 The series created in your influxdb will be named
 `<prefix>server.postgresql.size<postfix>` and will have the following columns:
