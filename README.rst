@@ -56,6 +56,14 @@ influxdb_get_memory_usage
 Collects the total memory of your user, plus the memory and name of the largest
 process.
 
+You can run it like this:
+
+    ./manage.py influxdb_get_memory_usage
+    ./manage.py influxdb_get_memory_usage username
+
+If you don't provide a username, the current user that runs the script will be
+used.
+
 You could schedule it like this::
 
     * * * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_memory_usage username > $HOME/mylogs/cron/influxdb-get-memory-usage.log 2>&1
@@ -73,6 +81,13 @@ influxdb_get_disk_usage
 
 Collects the total disk usage for the given path.
 
+You can run it like this::
+
+    ./manage.py influxdb_get_disk_usage $HOME
+
+You should give an absolute path to the folder which you want to measure. On a
+shared hosting environment this would probably be your home folder.
+
 You could schedule it like this::
 
     * * * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_disk_usage $HOME > $HOME/mylogs/cron/influxdb-get-disk-usage.log 2>&1
@@ -87,6 +102,14 @@ influxdb_get_database_size
 ++++++++++++++++++++++++++
 
 Collects the total disk usage for the given database.
+
+You can run it like this::
+
+    ./manage.py influxdb_get_database_size db_role db_name
+
+You shoudl provide role and name for the database you want to measure. Make
+sure that you have a `.pgpass` file in place so that you don't need to enter
+a password for this user.
 
 You could schedule it like this::
 
@@ -106,6 +129,9 @@ If you would like to track tne number of emails sent, you can set your
 
     EMAIL_BACKEND = 'influxdb_metrics.email.InfluxDBEmailBackend'
 
+When the setting is set, metrics will be sent every time you run `.manage.py
+send_mail`.
+
 The series created in your influxdb will be named
 `<prefix>django.email.sent<postfix>` and will have the following columns:
 
@@ -117,7 +143,6 @@ InfluxDBRequestMiddleware
 
 If you would like to track the number and speed of all requests, you can add
 the `InfluxDBRequestMiddleware` at the end of your `MIDDLEWARE_CLASSES`::
-
 
     MIDDLEWARE_CLASSES = [
         ...
@@ -143,6 +168,11 @@ hourly/daily averages. When doing that, you will obviously lose the detailed
 information like `referer` and `referer_tld` but it might make sense to create
 a second continuous query to count and downsample at least the `referer_tld`
 values.
+
+NOTE: I don't know what impact this has on overall request time or how much
+stress this would put on the influxdb server if you get thousands of requests.
+It would probably wise to consider something like statsd to aggregate the
+requests first and then send them to influxdb in bulk.
 
 
 Tracking User Count
