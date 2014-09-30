@@ -38,6 +38,8 @@ dev_requires = [
 
 install_requires = [
     'django',
+    'influxdb',
+    'python-server-metrics',
 ]
 
 
