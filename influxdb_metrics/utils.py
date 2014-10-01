@@ -1,7 +1,48 @@
 """Utilities for working with influxdb."""
+import copy
+
 from django.conf import settings
 
 from influxdb import client as influxdb
+
+
+def apply_prefix_postfix(series_name, apply_prefix=True, apply_postfix=True):
+    """
+    Applies prefix or postfix to the given series name and returns it.
+
+    :param series_name: String representing a series name.
+    :param apply_prefix: If ``True``, the ``INFLUXDB_SERIES_PREFIX`` will be
+      prepended to the ``series_name``.
+    :param apply_postfix: If ``True``, the ``INFLUXDB_SERIES_POSTFIX`` will be
+      appended to the ``series_name``.
+
+    """
+    prefix = ''
+    if apply_prefix and getattr(settings, 'INFLUXDB_SERIES_PREFIX', False):
+        prefix = settings.INFLUXDB_SERIES_PREFIX
+    postfix = ''
+    if apply_postfix and getattr(settings, 'INFLUXDB_SERIES_POSTFIX', False):
+        postfix = settings.INFLUXDB_SERIES_POSTFIX
+    full_series_name = '{0}{1}{2}'.format(prefix, series_name, postfix)
+    return full_series_name
+
+
+def apply_prefix_postfix_to_data(data, apply_prefix=True, apply_postfix=True):
+    """
+    Applies prefix or postfix to the given data dict and returns it.
+
+    :param data: The datadict that you would pass to ``write_points``.
+    :param apply_prefix: If ``True``, the ``INFLUXDB_SERIES_PREFIX`` will be
+      prepended to the ``series_name``.
+    :param apply_postfix: If ``True``, the ``INFLUXDB_SERIES_POSTFIX`` will be
+      appended to the ``series_name``.
+
+    """
+    new_data = copy.deepcopy(data)
+    for data_dict in new_data:
+        data_dict['name'] = apply_prefix_postfix(
+            data_dict['name'], apply_prefix, apply_postfix)
+    return new_data
 
 
 def get_db():
@@ -33,13 +74,8 @@ def write_point(series_name, column_name=None, value=None, apply_prefix=True,
     if column_name is None:
         column_name = 'value'
 
-    prefix = ''
-    if apply_prefix and getattr(settings, 'INFLUXDB_SERIES_PREFIX', False):
-        prefix = settings.INFLUXDB_SERIES_PREFIX
-    postfix = ''
-    if apply_postfix and getattr(settings, 'INFLUXDB_SERIES_POSTFIX', False):
-        postfix = settings.INFLUXDB_SERIES_POSTFIX
-    full_series_name = '{0}{1}{2}'.format(prefix, series_name, postfix)
+    full_series_name = apply_prefix_postfix(
+        series_name, apply_prefix, apply_postfix)
 
     data = [{
         'name': full_series_name,
@@ -48,7 +84,7 @@ def write_point(series_name, column_name=None, value=None, apply_prefix=True,
     write_points(data)
 
 
-def write_points(data):
+def write_points(data, apply_prefix=True, apply_postfix=True):
     """
     Writes a series to influxdb.
 
@@ -60,7 +96,13 @@ def write_points(data):
             'points': [[value, another_value]], }]
 
     :param data: Dictionary with ``name``, ``columns`` and ``points``.
+    :param apply_prefix: If ``True``, the ``INFLUXDB_SERIES_PREFIX`` will be
+      prepended to the ``series_name``.
+    :param apply_postfix: If ``True``, the ``INFLUXDB_SERIES_POSTFIX`` will be
+      appended to the ``series_name``.
 
     """
     db = get_db()
-    db.write_points(data)
+    new_data = copy.deepcopy(data)
+    new_data = apply_prefix_postfix_to_data(data, apply_prefix, apply_postfix)
+    db.write_points(new_data)

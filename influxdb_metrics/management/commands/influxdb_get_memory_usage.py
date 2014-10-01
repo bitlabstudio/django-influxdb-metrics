@@ -1,11 +1,23 @@
 """Collects the current memory usage and sends it to influxdb."""
 from django.core.management.base import BaseCommand, CommandError  # NOQA
 
+from server_metrics.memory import get_memory_usage
+
+from ...utils import write_points
+
 
 class Command(BaseCommand):
-    args = '<name name ..>'
-    help = 'Say hello to <name(s)>'
+    args = '<username>'
+    help = 'Returns total memory of all processes of the given user.'
 
     def handle(self, *args, **options):
-        for name in args:
-            self.stdout.write('Hello %s.' % name)
+        username = None
+        if args:
+            username = args[0]
+        total, largest_process, largest_process_name = \
+            get_memory_usage(username)
+        data = [{
+            'name': 'server.memory.usage',
+            'columns': ['value', 'largest_process', 'largest_process_name'],
+            'points': [[total, largest_process, largest_process_name]], }]
+        write_points(data)

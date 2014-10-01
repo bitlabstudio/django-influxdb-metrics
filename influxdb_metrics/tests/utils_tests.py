@@ -1,9 +1,51 @@
 """Tests for the utils module of the influxdb_metrics app."""
+import copy
+
 from django.test import TestCase
 
 from mock import patch
 
 from .. import utils
+
+
+class ApplyPrefixPostfixTestCase(TestCase):
+    """Tests for the ``apply_prefix_postfix`` method."""
+    longMessage = True
+
+    def test_method(self):
+        result = utils.apply_prefix_postfix('foobar')
+        self.assertEqual(result, 'pre.foobar.post', msg=(
+            'Should apply prefix and postfix by default'))
+
+        result = utils.apply_prefix_postfix('foobar', False)
+        self.assertEqual(result, 'foobar.post', msg=(
+            'Should not apply prefix if set to `False`'))
+
+        result = utils.apply_prefix_postfix('foobar', False, False)
+        self.assertEqual(result, 'foobar', msg=(
+            'Should not apply postfix if set to `False`'))
+
+
+class ApplyPrefixPostfixToDataTestCase(TestCase):
+    """Tests for the ``apply_prefix_postfix_to_data`` method."""
+    longMessage = True
+
+    def test_method(self):
+        data = [
+            {'name': 'foobar', },
+            {'name': 'barfoo', }
+        ]
+        backup = copy.deepcopy(data)
+        expected = [
+            {'name': 'pre.foobar.post', },
+            {'name': 'pre.barfoo.post', }
+        ]
+
+        result = utils.apply_prefix_postfix_to_data(data)
+        self.assertEqual(data, backup, msg=(
+            'Should not alter the original data dict'))
+        self.assertEqual(result, expected, msg=(
+            'Should apply prefix and postix to all items in the data dict'))
 
 
 class GetDBTestCase(TestCase):
@@ -62,11 +104,18 @@ class WritePointsTestCase(TestCase):
 
     def test_method(self):
         with patch('influxdb_metrics.utils.get_db') as mock_get_db:
-            data = [{'test': 1, }]
-            utils.write_points([{'test': 1, }])
+            data = [{'name': 'series.name', }]
+            utils.write_points(data, False, False)
             self.assertEqual(
                 mock_get_db.return_value.write_points.call_args[0][0],
                 data,
                 msg=('Should instantiate a client and call the `write_points`'
                      ' method of that client and should pass in the given'
                      ' data'))
+
+            new_data = utils.apply_prefix_postfix_to_data(data)
+            utils.write_points(data)
+            self.assertEqual(
+                mock_get_db.return_value.write_points.call_args[0][0],
+                new_data,
+                msg=('Should apply prefix and postfix to the whole data dict'))
