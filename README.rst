@@ -102,7 +102,7 @@ The series created in your influxdb will be named
 
 
 influxdb_get_postgresql_size
-++++++++++++++++++++++++++
+++++++++++++++++++++++++++++
 
 Collects the total disk usage for the given database.
 

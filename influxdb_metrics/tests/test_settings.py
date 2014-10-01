@@ -39,6 +39,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'influxdb_metrics.middleware.InfluxDBRequestMiddleware',
 )
 
 EMAIL_BACKEND = 'influxdb_metrics.email.InfluxDBEmailBackend'
