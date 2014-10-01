@@ -81,6 +81,9 @@ influxdb_get_disk_usage
 
 Collects the total disk usage for the given path.
 
+NOTE: This faciliates the ``du`` command with the ``--block-size`` flag,
+therefore it doesn't work on OSX.
+
 You can run it like this::
 
     ./manage.py influxdb_get_disk_usage $HOME

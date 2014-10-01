@@ -18,8 +18,8 @@ class InfluxdbGetMemoryUsageTestCase(TestCase):
             cmd.handle()
             call_args = mock_write_points.call_args[0][0]
             self.assertEqual(
-                ['value', 'largest_process', 'largest_process_name'],
                 call_args[0]['columns'],
+                ['value', 'largest_process', 'largest_process_name'],
                 msg=('Should construct a data dict with the correct columns'))
 
             cmd.handle('foobar')
