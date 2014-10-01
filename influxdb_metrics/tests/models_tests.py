@@ -1,4 +1,4 @@
-"""Tests for the models of the influxdb_metrix app."""
+"""Tests for the models of the influxdb_metrics app."""
 from django.test import TestCase
 
 # from . import factories

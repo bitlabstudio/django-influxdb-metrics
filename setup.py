@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 """
-Python setup file for the influxdb_metrix app.
+Python setup file for the influxdb_metrics app.
 
 In order to register your app at pypi.python.org, create an account at
 pypi.python.org and login, then register your new app like so:
@@ -21,7 +21,7 @@ If all looks good, you can make your first release:
     python setup.py sdist upload
 
 For new releases, you need to bump the version number in
-influxdb_metrix/__init__.py and re-run the above command.
+influxdb_metrics/__init__.py and re-run the above command.
 
 For more information on creating source distributions, see
 http://docs.python.org/2/distutils/sourcedist.html
@@ -29,7 +29,7 @@ http://docs.python.org/2/distutils/sourcedist.html
 """
 import os
 from setuptools import setup, find_packages
-import influxdb_metrix as app
+import influxdb_metrics as app
 
 
 dev_requires = [
@@ -56,7 +56,7 @@ setup(
     long_description=read('README.rst'),
     license='The MIT License',
     platforms=['OS Independent'],
-    keywords='django, app, reusable, metrix, influxdb',
+    keywords='django, app, reusable, metrics, influxdb',
     author='Martin Brochhaus',
     author_email='mbrochh@gmail.com',
     url="https://github.com/bitmazk/django-influxdb-metrics",

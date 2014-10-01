@@ -19,7 +19,7 @@ DATABASES = {
     }
 }
 
-ROOT_URLCONF = 'influxdb_metrix.tests.urls'
+ROOT_URLCONF = 'influxdb_metrics.tests.urls'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(APP_ROOT, '../app_static')
@@ -53,8 +53,8 @@ EXTERNAL_APPS = [
 ]
 
 INTERNAL_APPS = [
-    'influxdb_metrix',
-    'influxdb_metrix.tests.test_app',
+    'influxdb_metrics',
+    'influxdb_metrics.tests.test_app',
 ]
 
 INSTALLED_APPS = EXTERNAL_APPS + INTERNAL_APPS

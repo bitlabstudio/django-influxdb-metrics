@@ -3,7 +3,7 @@ include LICENSE
 include DESCRIPTION
 include CHANGELOG.txt
 include README.md
-graft influxdb_metrix
+graft influxdb_metrics
 global-exclude *.orig *.pyc *.log *.swp
-prune influxdb_metrix/tests/coverage
-prune influxdb_metrix/.ropeproject
+prune influxdb_metrics/tests/coverage
+prune influxdb_metrics/.ropeproject

@@ -16,15 +16,15 @@ To get the latest commit from GitHub
 
 .. code-block:: bash
 
-    pip install -e git+git://github.com/bitmazk/django-influxdb-metrics.git#egg=influxdb_metrix
+    pip install -e git+git://github.com/bitmazk/django-influxdb-metrics.git#egg=influxdb_metrics
 
-Add ``influxdb_metrix`` to your ``INSTALLED_APPS``
+Add ``influxdb_metrics`` to your ``INSTALLED_APPS``
 
 .. code-block:: python
 
     INSTALLED_APPS = (
         ...,
-        'influxdb_metrix',
+        'influxdb_metrics',
     )
 
 Settings

@@ -1,5 +1,5 @@
 develop: setup-git
-	pip install "file://`pwd`#egg=influxdb_metrix[dev]"
+	pip install "file://`pwd`#egg=influxdb_metrics[dev]"
 	pip install -e .
 	pip install -r test_requirements.txt
 
@@ -9,5 +9,5 @@ setup-git:
 
 lint-python:
 	@echo "Linting Python files"
-	PYFLAKES_NODOCTEST=1 flake8 influxdb_metrix
+	PYFLAKES_NODOCTEST=1 flake8 influxdb_metrics
 	@echo ""
