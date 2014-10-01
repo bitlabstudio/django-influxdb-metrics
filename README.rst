@@ -101,14 +101,14 @@ The series created in your influxdb will be named
 * ``value``: The total memory usage in bytes
 
 
-influxdb_get_database_size
+influxdb_get_postgresql_size
 ++++++++++++++++++++++++++
 
 Collects the total disk usage for the given database.
 
 You can run it like this::
 
-    ./manage.py influxdb_get_database_size db_role db_name
+    ./manage.py influxdb_get_postgresql_size db_role db_name
 
 You shoudl provide role and name for the database you want to measure. Make
 sure that you have a ``.pgpass`` file in place so that you don't need to enter
@@ -116,7 +116,7 @@ a password for this user.
 
 You could schedule it like this::
 
-    0 */1 * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_database_size $HOME > $HOME/mylogs/cron/influxdb-get-database-size.log 2>&1
+    0 */1 * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_postgresql_size $HOME > $HOME/mylogs/cron/influxdb-get-postgresql-size.log 2>&1
 
 The series created in your influxdb will be named
 `<prefix>server.postgresql.size<postfix>` and will have the following columns:
