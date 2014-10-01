@@ -1,6 +1,6 @@
 [run]
 source =
-    influxdb_metrix
+    influxdb_metrics
 branch = True
 omit =
     ./*

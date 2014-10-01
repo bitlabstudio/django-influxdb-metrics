@@ -18,5 +18,3 @@ DATABASES = {
         'NAME': 'db.sqlite',
     }
 }
-
-INSTALLED_APPS.append('south', )

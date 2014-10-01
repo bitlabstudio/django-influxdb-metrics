@@ -34,10 +34,10 @@ def write_point(series_name, column_name=None, value=None, apply_prefix=True,
         column_name = 'value'
 
     prefix = ''
-    if apply_prefix and getattr(settings, 'INFLUXDB_SERIES_PREFIX'):
+    if apply_prefix and getattr(settings, 'INFLUXDB_SERIES_PREFIX', False):
         prefix = settings.INFLUXDB_SERIES_PREFIX
     postfix = ''
-    if apply_postfix and getattr(settings, 'INFLUXDB_SERIES_POSTFIX'):
+    if apply_postfix and getattr(settings, 'INFLUXDB_SERIES_POSTFIX', False):
         postfix = settings.INFLUXDB_SERIES_POSTFIX
     full_series_name = '{0}{1}{2}'.format(prefix, series_name, postfix)
 
