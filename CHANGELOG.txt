@@ -1,5 +1,7 @@
 === 0.1.X (ongoing, to be released as 0.2) ===
 
+- added `default.` to all series names
+
 === 0.1 ===
 - Initial commit
 
