@@ -25,6 +25,25 @@ class UserLoggedInHandlerTestCase(TestCase):
             msg=('Should send one metric to the login series'))
 
 
+class UserLoginFailedHandlerTestCase(TestCase):
+    """Tests for the ``user_login_failed_handler`` signal handler."""
+    longMessage = False
+
+    def setUp(self):
+        self.patch_write_point = patch('influxdb_metrics.models.write_point')
+        self.mock_write_point = self.patch_write_point.start()
+
+    def tearDown(self):
+        self.patch_write_point.stop()
+
+    def test_handler(self):
+        models.user_login_failed_handler(None)
+        self.assertEqual(
+            self.mock_write_point.call_args[0][0],
+            'django.auth.user.login.failed',
+            msg=('Should send one metric to the login failed series'))
+
+
 class UserPostDeleteHandlerTestCase(TestCase):
     """Tests for the ``user_post_delete_handler`` signal handler."""
     longMessage = False
