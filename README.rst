@@ -68,7 +68,7 @@ You could schedule it like this::
 
     * * * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_memory_usage username > $HOME/mylogs/cron/influxdb-get-memory-usage.log 2>&1
 
-The series created in your influxdb will be named
+The series created in your InfluxDB will be named
 ``<prefix>server.memory.usage<postfix>`` and will have the following columns:
 
 * ``value``: The total memory usage in bytes
@@ -95,7 +95,7 @@ You could schedule it like this::
 
     0 */1 * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_disk_usage $HOME > $HOME/mylogs/cron/influxdb-get-disk-usage.log 2>&1
 
-The series created in your influxdb will be named
+The series created in your InfluxDB will be named
 ``<prefix>server.disk.usage<postfix>`` and will have the following columns:
 
 * ``value``: The total memory usage in bytes
@@ -118,7 +118,7 @@ You could schedule it like this::
 
     0 */1 * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_postgresql_size $HOME > $HOME/mylogs/cron/influxdb-get-postgresql-size.log 2>&1
 
-The series created in your influxdb will be named
+The series created in your InfluxDB will be named
 `<prefix>server.postgresql.size<postfix>` and will have the following columns:
 
 * ``value``: The total database size in bytes
@@ -135,7 +135,7 @@ If you would like to track tne number of emails sent, you can set your
 When the setting is set, metrics will be sent every time you run ``.manage.py
 send_mail``.
 
-The series created in your influxdb will be named
+The series created in your InfluxDB will be named
 ``<prefix>django.email.sent<postfix>`` and will have the following columns:
 
 * ``value``: The number of emails sent
@@ -152,7 +152,7 @@ the ``InfluxDBRequestMiddleware`` at the end of your ``MIDDLEWARE_CLASSES``::
         'influxdb_metrics.middleware.InfluxDBRequestMiddleware',
     ]
 
-The series created in your influxdb will be named
+The series created in your InfluxDB will be named
 ``<prefix>django.request<postfix>`` and will have the following columns:
 
 * ``value``: The request time in milliseconds.
@@ -173,9 +173,9 @@ create a second continuous query to count and downsample at least the
 ``referer_tld`` values.
 
 NOTE: I don't know what impact this has on overall request time or how much
-stress this would put on the influxdb server if you get thousands of requests.
+stress this would put on the InfluxDB server if you get thousands of requests.
 It would probably wise to consider something like statsd to aggregate the
-requests first and then send them to influxdb in bulk.
+requests first and then send them to InfluxDB in bulk.
 
 
 Tracking User Count
@@ -184,8 +184,20 @@ Tracking User Count
 This app's ``models.py`` contains a ``post_save`` and a ``post_delete`` handler
 which will detect when a user is created or deleted.
 
-The series created in your influxdb will be named
-``<prefix>django.user.count<postfix>`` and will have the following columns:
+It will create three series in your InfluxDB:
+
+The first one will be named ``<prefix>django.auth.user.create<postfix>`` and
+will have the following columns:
+
+* ``value``: 1 
+
+The second one will be named ``<prefix>django.auth.user.delete<postfix>`` and
+will have the following columns:
+
+* ``value``: 1 
+
+The third one will be named ``<prefix>django.auth.user.count<postfix>`` and
+will have the following columns:
 
 * ``value``: The total number of users in the database
 
@@ -195,7 +207,7 @@ Tracking User Logins
 
 This app's ``models.py`` contains a handler for the ``user_logged_in`` signal.
 
-The series created in your influxdb will be named
+The series created in your InfluxDB will be named
 ``<prefix>django.user.logins<postfix>`` and will have the following columns:
 
 * ``value``: 1
@@ -207,7 +219,7 @@ Tracking Failed User Logins
 This app's ``models.py`` contains a handler for the ``user_logged_failed``
 signal.
 
-The series created in your influxdb will be named
+The series created in your InfluxDB will be named
 ``<prefix>django.user.logins.failed<postfix>`` and will have the following
 columns:
 
