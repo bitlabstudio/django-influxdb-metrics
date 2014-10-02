@@ -17,7 +17,7 @@ class Command(BaseCommand):
         total, largest_process, largest_process_name = \
             get_memory_usage(username)
         data = [{
-            'name': 'server.memory.usage',
+            'name': 'default.server.memory.usage',
             'columns': ['value', 'largest_process', 'largest_process_name'],
             'points': [[total, largest_process, largest_process_name]], }]
         write_points(data)

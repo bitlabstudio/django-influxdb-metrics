@@ -21,7 +21,7 @@ class UserLoggedInHandlerTestCase(TestCase):
         models.user_logged_in_handler(None)
         self.assertEqual(
             self.mock_write_point.call_args[0][0],
-            'django.auth.user.login',
+            'default.django.auth.user.login',
             msg=('Should send one metric to the login series'))
 
 
@@ -40,7 +40,7 @@ class UserLoginFailedHandlerTestCase(TestCase):
         models.user_login_failed_handler(None)
         self.assertEqual(
             self.mock_write_point.call_args[0][0],
-            'django.auth.user.login.failed',
+            'default.django.auth.user.login.failed',
             msg=('Should send one metric to the login failed series'))
 
 
@@ -63,11 +63,11 @@ class UserPostDeleteHandlerTestCase(TestCase):
         models.user_post_delete_handler(None, created=True)
         self.assertEqual(
             self.mock_write_point.call_args_list[0][0][0],
-            'django.auth.user.delete',
+            'default.django.auth.user.delete',
             msg=('Should send one metric to the delete series'))
         self.assertEqual(
             self.mock_write_point.call_args_list[1][0][0],
-            'django.auth.user.count',
+            'default.django.auth.user.count',
             msg=('Should send a second metric to the count series'))
 
 
@@ -90,9 +90,9 @@ class UserPostSaveHandlerTestCase(TestCase):
         models.user_post_save_handler(None, created=True)
         self.assertEqual(
             self.mock_write_point.call_args_list[0][0][0],
-            'django.auth.user.create',
+            'default.django.auth.user.create',
             msg=('Should send one metric to the create series'))
         self.assertEqual(
             self.mock_write_point.call_args_list[1][0][0],
-            'django.auth.user.count',
+            'default.django.auth.user.count',
             msg=('Should send a second metric to the count series'))

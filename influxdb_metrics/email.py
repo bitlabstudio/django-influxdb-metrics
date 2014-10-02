@@ -13,5 +13,5 @@ class InfluxDbEmailBackend(EmailBackend):
         num_sent = super(InfluxDbEmailBackend, self).send_messages(
             email_messages)
         if num_sent:
-            write_point('django.email.sent', 'value', num_sent)
+            write_point('default.django.email.sent', 'value', num_sent)
         return num_sent

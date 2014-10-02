@@ -18,7 +18,7 @@ class Command(BaseCommand):
             db_name = args[1]
         total = get_database_size(db_role, db_name)
         data = [{
-            'name': 'server.postgresql.size',
+            'name': 'default.server.postgresql.size',
             'columns': ['value', ],
             'points': [[total, ]], }]
         write_points(data)

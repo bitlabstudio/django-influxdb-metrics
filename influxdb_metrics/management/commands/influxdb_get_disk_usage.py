@@ -16,7 +16,7 @@ class Command(BaseCommand):
             path = args[0]
         total = get_disk_usage(path)
         data = [{
-            'name': 'server.disk.usage',
+            'name': 'default.server.disk.usage',
             'columns': ['value', ],
             'points': [[total, ]], }]
         write_points(data)

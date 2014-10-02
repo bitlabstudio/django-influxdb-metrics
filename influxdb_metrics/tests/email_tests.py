@@ -29,5 +29,5 @@ class InfluxdbDbBackendTestCase(TestCase):
             'Should return the number of sent emails'))
         self.assertEqual(
             self.mock_write_point.call_args[0],
-            ('django.email.sent', 'value', 5),
+            ('default.django.email.sent', 'value', 5),
             msg=('Should create a series with the correct name and column '))

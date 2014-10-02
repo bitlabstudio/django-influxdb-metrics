@@ -69,7 +69,7 @@ You could schedule it like this::
     * * * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_memory_usage username > $HOME/mylogs/cron/influxdb-get-memory-usage.log 2>&1
 
 The series created in your InfluxDB will be named
-``<prefix>server.memory.usage<postfix>`` and will have the following columns:
+``<prefix>default.server.memory.usage<postfix>`` and will have the following columns:
 
 * ``value``: The total memory usage in bytes
 * ``largest_process``: Memory usage of the largest process in bytes
@@ -96,7 +96,7 @@ You could schedule it like this::
     0 */1 * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_disk_usage $HOME > $HOME/mylogs/cron/influxdb-get-disk-usage.log 2>&1
 
 The series created in your InfluxDB will be named
-``<prefix>server.disk.usage<postfix>`` and will have the following columns:
+``<prefix>default.server.disk.usage<postfix>`` and will have the following columns:
 
 * ``value``: The total memory usage in bytes
 
@@ -119,7 +119,7 @@ You could schedule it like this::
     0 */1 * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_postgresql_size $HOME > $HOME/mylogs/cron/influxdb-get-postgresql-size.log 2>&1
 
 The series created in your InfluxDB will be named
-`<prefix>server.postgresql.size<postfix>` and will have the following columns:
+`<prefix>default.server.postgresql.size<postfix>` and will have the following columns:
 
 * ``value``: The total database size in bytes
 
@@ -136,7 +136,7 @@ When the setting is set, metrics will be sent every time you run ``.manage.py
 send_mail``.
 
 The series created in your InfluxDB will be named
-``<prefix>django.email.sent<postfix>`` and will have the following columns:
+``<prefix>default.django.email.sent<postfix>`` and will have the following columns:
 
 * ``value``: The number of emails sent
 
@@ -153,7 +153,7 @@ the ``InfluxDBRequestMiddleware`` at the end of your ``MIDDLEWARE_CLASSES``::
     ]
 
 The series created in your InfluxDB will be named
-``<prefix>django.request<postfix>`` and will have the following columns:
+``<prefix>default.django.request<postfix>`` and will have the following columns:
 
 * ``value``: The request time in milliseconds.
 * ``is_ajax``: `1` if it was an AJAX request, otherwise `0`
@@ -186,18 +186,20 @@ which will detect when a user is created or deleted.
 
 It will create three series in your InfluxDB:
 
-The first one will be named ``<prefix>django.auth.user.create<postfix>`` and
-will have the following columns:
+The first one will be named
+``<prefix>default.django.auth.user.create<postfix>`` and will have the
+following columns:
 
 * ``value``: 1 
 
-The second one will be named ``<prefix>django.auth.user.delete<postfix>`` and
-will have the following columns:
+The second one will be named
+``<prefix>default.django.auth.user.delete<postfix>`` and will have the
+following columns:
 
 * ``value``: 1
 
-The third one will be named ``<prefix>django.auth.user.count<postfix>`` and
-will have the following columns:
+The third one will be named ``<prefix>default.django.auth.user.count<postfix>``
+and will have the following columns:
 
 * ``value``: The total number of users in the database
 
@@ -208,7 +210,7 @@ Tracking User Logins
 This app's ``models.py`` contains a handler for the ``user_logged_in`` signal.
 
 The series created in your InfluxDB will be named
-``<prefix>django.auth.user.login<postfix>`` and will have the following
+``<prefix>default.django.auth.user.login<postfix>`` and will have the following
 columns:
 
 * ``value``: 1
@@ -221,8 +223,8 @@ This app's ``models.py`` contains a handler for the ``user_login_failed``
 signal.
 
 The series created in your InfluxDB will be named
-``<prefix>django.auth.user.login.failed<postfix>`` and will have the following
-columns:
+``<prefix>default.django.auth.user.login.failed<postfix>`` and will have the
+following columns:
 
 * ``value``: 1
 

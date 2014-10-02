@@ -51,7 +51,7 @@ class InfluxDBRequestMiddleware(object):
             if referer_tld:
                 referer_tld_string = referer_tld.tld
             data = [{
-                'name': 'django.request',
+                'name': 'default.django.request',
                 'columns': [
                     'value',
                     'is_ajax',
