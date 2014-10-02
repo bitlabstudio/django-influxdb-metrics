@@ -194,7 +194,7 @@ will have the following columns:
 The second one will be named ``<prefix>django.auth.user.delete<postfix>`` and
 will have the following columns:
 
-* ``value``: 1 
+* ``value``: 1
 
 The third one will be named ``<prefix>django.auth.user.count<postfix>`` and
 will have the following columns:
@@ -208,7 +208,8 @@ Tracking User Logins
 This app's ``models.py`` contains a handler for the ``user_logged_in`` signal.
 
 The series created in your InfluxDB will be named
-``<prefix>django.user.logins<postfix>`` and will have the following columns:
+``<prefix>django.auth.user.login<postfix>`` and will have the following
+columns:
 
 * ``value``: 1
 

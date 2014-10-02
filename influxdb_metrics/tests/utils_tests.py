@@ -6,6 +6,7 @@ from django.test import TestCase
 from mock import patch
 
 from .. import utils
+reload(utils)
 
 
 class ApplyPrefixPostfixTestCase(TestCase):
