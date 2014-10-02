@@ -1,4 +1,6 @@
-=== (ongoing) ===
+=== 0.1.X (ongoing, to be released as 0.2) ===
+
+=== 0.1 ===
 - Initial commit
 
 
