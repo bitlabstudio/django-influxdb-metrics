@@ -42,6 +42,11 @@ You need to set the following settings::
     INFLUXDB_SERIES_PREFIX = 'yourservername.'
     INFLUXDB_SERIES_POSTFIX = '.whatever'
 
+If you would like to disable sending of metrics (i.e. for local development),
+you can set::
+
+    INFLUXDB_DISABLED = True
+
 
 Usage
 -----

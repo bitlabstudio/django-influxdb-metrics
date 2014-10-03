@@ -71,6 +71,9 @@ def write_point(series_name, column_name=None, value=None, apply_prefix=True,
       appended to the ``series_name``.
 
     """
+    if getattr(settings, 'INFLUXDB_DISABLED', False):
+        return
+
     if column_name is None:
         column_name = 'value'
 
@@ -99,6 +102,9 @@ def write_points(data, apply_prefix=True, apply_postfix=True):
       appended to the ``series_name``.
 
     """
+    if getattr(settings, 'INFLUXDB_DISABLED', False):
+        return
+
     db = get_db()
     new_data = copy.deepcopy(data)
     new_data = apply_prefix_postfix_to_data(data, apply_prefix, apply_postfix)
