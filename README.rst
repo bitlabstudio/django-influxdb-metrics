@@ -216,19 +216,6 @@ columns:
 * ``value``: 1
 
 
-Tracking Failed User Logins
-+++++++++++++++++++++++++++
-
-This app's ``models.py`` contains a handler for the ``user_login_failed``
-signal.
-
-The series created in your InfluxDB will be named
-``<prefix>default.django.auth.user.login.failed<postfix>`` and will have the
-following columns:
-
-* ``value``: 1
-
-
 Contribute
 ----------
 
