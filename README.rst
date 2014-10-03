@@ -121,7 +121,7 @@ a password for this user.
 
 You could schedule it like this::
 
-    0 */1 * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_postgresql_size $HOME > $HOME/mylogs/cron/influxdb-get-postgresql-size.log 2>&1
+    0 */1 * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_postgresql_size db_role db_name > $HOME/mylogs/cron/influxdb-get-postgresql-size.log 2>&1
 
 The series created in your InfluxDB will be named
 `<prefix>default.server.postgresql.size<postfix>` and will have the following columns:
