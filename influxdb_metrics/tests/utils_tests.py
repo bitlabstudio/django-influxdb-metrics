@@ -69,34 +69,17 @@ class WritePointTestCase(TestCase):
             self.assertEqual(
                 mock_write_points.call_args[0][0],
                 [{'points': [[1]],
-                  'name': 'pre.foobar.post',
+                  'name': 'foobar',
                   'columns': ['value']}],
-                msg=('Should set column_name to `value` and apply prefix and'
-                     ' postfix to `series_name`'))
+                msg=('Should set column_name to `value`'))
 
             utils.write_point('foobar', column_name='count', value=1)
             self.assertEqual(
                 mock_write_points.call_args[0][0],
                 [{'points': [[1]],
-                  'name': 'pre.foobar.post',
+                  'name': 'foobar',
                   'columns': ['count']}],
                 msg=('Should set column_name to given value'))
-
-            utils.write_point('foobar', value=1, apply_prefix=False)
-            self.assertEqual(
-                mock_write_points.call_args[0][0],
-                [{'points': [[1]],
-                  'name': 'foobar.post',
-                  'columns': ['value']}],
-                msg=('Should not apply prefix if set to `False`'))
-
-            utils.write_point('foobar', value=1, apply_postfix=False)
-            self.assertEqual(
-                mock_write_points.call_args[0][0],
-                [{'points': [[1]],
-                  'name': 'pre.foobar',
-                  'columns': ['value']}],
-                msg=('Should not apply postfix if set to `False`'))
 
 
 class WritePointsTestCase(TestCase):

@@ -74,11 +74,8 @@ def write_point(series_name, column_name=None, value=None, apply_prefix=True,
     if column_name is None:
         column_name = 'value'
 
-    full_series_name = apply_prefix_postfix(
-        series_name, apply_prefix, apply_postfix)
-
     data = [{
-        'name': full_series_name,
+        'name': series_name,
         'columns': [column_name, ],
         'points': [[value]], }]
     write_points(data)
