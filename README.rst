@@ -66,8 +66,9 @@ You can run it like this::
     ./manage.py influxdb_get_memory_usage
     ./manage.py influxdb_get_memory_usage username
 
-If you don't provide a username, the current user that runs the script will be
-used.
+If you don't provide a username, total memory for all users will be collected.
+This might not be desirable on a shared hosting environment where you can see
+all user's processes.
 
 You could schedule it like this::
 
