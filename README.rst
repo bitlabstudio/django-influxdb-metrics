@@ -82,6 +82,34 @@ The series created in your InfluxDB will be named
 * ``largest_process_name``: String representing the largest process name
 
 
+influxdb_get_cpu_usage
+++++++++++++++++++++++
+
+Collects the total %CPU for the given user, plus the %CPU and name of the
+largest process.
+
+You can run it like this::
+
+    ./manage.py influxdb_get_cpu_usage
+    ./manage.py influxdb_get_cpu_usage username
+
+If you don't provide a username, total %CPU for all users will be collected.
+This might not be desirable on a shared hosting environment where you can see
+all user's processes.
+
+You could schedule it like this::
+
+    * * * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_cpu_usage username > $HOME/mylogs/cron/influxdb-get-cpu-usage.log 2>&1
+
+The series created in your InfluxDB will be named
+``<prefix>default.server.cpu.usage<postfix>`` and will have the following
+columns:
+
+* ``value``: The total %CPU
+* ``largest_process``: %CPU of the largest process
+* ``largest_process_name``: String representing the largest process name
+
+
 influxdb_get_disk_usage
 +++++++++++++++++++++++
 
