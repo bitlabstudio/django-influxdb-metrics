@@ -56,6 +56,12 @@ def get_db():
     )
 
 
+def query(query, time_precision='s', chunked=False):
+    """Wrapper around ``InfluxDBClient.query()``."""
+    db = get_db()
+    return db.query(query, time_precision=time_precision, chunked=chunked)
+
+
 def write_point(series_name, column_name=None, value=None, apply_prefix=True,
                 apply_postfix=True):
     """

@@ -59,6 +59,17 @@ class GetDBTestCase(TestCase):
             self.assertTrue('influxdb.InfluxDBClient()' in str(result))
 
 
+class QueryTestCase(TestCase):
+    """Tests for the ``query`` method."""
+    longMessage = True
+
+    def test_method(self):
+        with patch('influxdb_metrics.utils.get_db'):
+            result = utils.query('foo')
+            self.assertTrue('get_db().query()' in str(result), msg=(
+                'Calls `.query()` on the db instance'))
+
+
 class WritePointTestCase(TestCase):
     """Tests for the ``write_point`` method."""
     longMessage = True
@@ -80,6 +91,11 @@ class WritePointTestCase(TestCase):
                   'name': 'foobar',
                   'columns': ['count']}],
                 msg=('Should set column_name to given value'))
+
+        with self.settings(INFLUXDB_DISABLED=True):
+            result = utils.write_point('foobar', value=1)
+            self.assertEqual(result, None, msg=(
+                'If setting is set, should return immediately'))
 
 
 class WritePointsTestCase(TestCase):
@@ -103,3 +119,8 @@ class WritePointsTestCase(TestCase):
                 mock_get_db.return_value.write_points.call_args[0][0],
                 new_data,
                 msg=('Should apply prefix and postfix to the whole data dict'))
+
+        with self.settings(INFLUXDB_DISABLED=True):
+            result = utils.write_points([])
+            self.assertEqual(result, None, msg=(
+                'If setting is set, should return immediately'))

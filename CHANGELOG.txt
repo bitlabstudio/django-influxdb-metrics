@@ -3,6 +3,7 @@
 - added `default.` to all series names
 - added INFLUXDB_DISABLED setting
 - added influxdb_get_cpu_usage command
+- added utils.query method
 
 === 0.1 ===
 - Initial commit
