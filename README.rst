@@ -250,6 +250,19 @@ columns:
 * ``value``: 1
 
 
+Making Queries
+++++++++++++++
+
+If you need to get data out of your InfluxDB instance, you can easily do it
+like so::
+
+   from influxdb_metrics.utils import query
+   query('select * from series.name', time_precision='s', chunked=False)
+
+The method declaration is the same as the one in ``InfluxDBClient.query()``.
+This wrapper simply instanciates a client based on your settings.
+
+
 Contribute
 ----------
 
