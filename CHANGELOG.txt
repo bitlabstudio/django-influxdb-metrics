@@ -1,9 +1,11 @@
 === 0.1.X (ongoing, to be released as 0.2) ===
 
 - added `default.` to all series names
-- added INFLUXDB_DISABLED setting
-- added influxdb_get_cpu_usage command
-- added utils.query method
+- added `INFLUXDB_DISABLED` setting
+- added `influxdb_get_cpu_usage` command
+- added `utils.query()` method
+- also saving `request.get_full_path` in `default.django.request` series into
+  `full_path` column
 
 === 0.1 ===
 - Initial commit
