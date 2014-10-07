@@ -190,7 +190,10 @@ The series created in your InfluxDB will be named
 ``<prefix>default.django.request<postfix>`` and will have the following columns:
 
 * ``value``: The request time in milliseconds.
-* ``is_ajax``: `1` if it was an AJAX request, otherwise `0`
+* ``is_ajax``: `true` if it was an AJAX request, otherwise `false`
+* ``is_authenticated``: `true` if user was authenticated, otherwise `false`
+* ``is_staff``: `true` if user was a staff user, otherwise `false`
+* ``is_superuser``: `true` user was a superuser, otherwise `false`
 * ``method``: The request method (`GET` or `POST`)
 * ``module``: The python module that handled the request
 * ``view``: The view class or function that handled the request

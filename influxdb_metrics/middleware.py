@@ -37,9 +37,20 @@ class InfluxDBRequestMiddleware(object):
         if hasattr(request, '_start_time'):
             ms = int((time.time() - request._start_time) * 1000)
             if request.is_ajax():
-                is_ajax = 1
+                is_ajax = True
             else:
-                is_ajax = 0
+                is_ajax = False
+
+            is_authenticated = False
+            is_staff = False
+            is_superuser = False
+            if request.user.is_authenticated():
+                is_authenticated = True
+                if request.user.is_staff:
+                    is_staff = True
+                if request.user.is_superuser:
+                    is_superuser = True
+
             referer = request.META.get('HTTP_REFERER')
             referer_tld = None
             referer_tld_string = ''
@@ -55,6 +66,9 @@ class InfluxDBRequestMiddleware(object):
                 'columns': [
                     'value',
                     'is_ajax',
+                    'is_authenticated',
+                    'is_staff',
+                    'is_superuser',
                     'method',
                     'module',
                     'view',
@@ -64,6 +78,9 @@ class InfluxDBRequestMiddleware(object):
                 'points': [[
                     ms,
                     is_ajax,
+                    is_authenticated,
+                    is_staff,
+                    is_superuser,
                     request.method,
                     request._view_module,
                     request._view_name,
