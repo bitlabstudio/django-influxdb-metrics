@@ -1,4 +1,6 @@
-=== 0.1.X (ongoing, to be released as 0.2) ===
+=== 0.2.X (ongoing, to be released as 0.3) ===
+
+=== 0.2 ===
 
 - added `is_authenticated`, `is_staff` and `is_superuser` to
   `default.django.request` series.
