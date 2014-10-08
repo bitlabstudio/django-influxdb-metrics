@@ -198,8 +198,10 @@ The series created in your InfluxDB will be named
 * ``module``: The python module that handled the request
 * ``view``: The view class or function that handled the request
 * ``referer``: The full URL from `request.META['HTTP_REFERER']`
-* ``referer_tld``: The top level domain of the referer. It tries to be smart and
-  regards ``google.co.uk`` as a top level domain (instead of ``co.uk``)
+* ``referer_tld``: The top level domain of the referer. It tries to be smart
+     and regards ``google.co.uk`` as a top level domain (instead of ``co.uk``)
+* ``full_path``: The full path that was requested
+* ``path``: The path without GET params that was requested
 
 If you have a highly frequented site, this table could get big really quick.
 You should make sure to create a shard with a low retention time for this

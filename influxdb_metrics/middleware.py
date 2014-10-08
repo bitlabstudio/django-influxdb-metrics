@@ -74,7 +74,8 @@ class InfluxDBRequestMiddleware(object):
                     'view',
                     'referer',
                     'referer_tld',
-                    'full_path'],
+                    'full_path',
+                    'path'],
                 'points': [[
                     ms,
                     is_ajax,
@@ -86,5 +87,6 @@ class InfluxDBRequestMiddleware(object):
                     request._view_name,
                     referer,
                     referer_tld_string,
-                    request.get_full_path()], ], }]
+                    request.get_full_path(),
+                    request.path], ], }]
             write_points(data)
