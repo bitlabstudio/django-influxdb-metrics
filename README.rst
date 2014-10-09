@@ -179,11 +179,11 @@ InfluxDBRequestMiddleware
 +++++++++++++++++++++++++
 
 If you would like to track the number and speed of all requests, you can add
-the ``InfluxDBRequestMiddleware`` at the end of your ``MIDDLEWARE_CLASSES``::
+the ``InfluxDBRequestMiddleware`` at the top of your ``MIDDLEWARE_CLASSES``::
 
     MIDDLEWARE_CLASSES = [
-        ...
         'influxdb_metrics.middleware.InfluxDBRequestMiddleware',
+        ...
     ]
 
 The series created in your InfluxDB will be named
