@@ -19,5 +19,7 @@ class Command(BaseCommand):
         data = [{
             'name': 'default.server.cpu.usage',
             'columns': ['value', 'largest_process', 'largest_process_name'],
-            'points': [[total, largest_process, largest_process_name]], }]
+            'points': [[
+                float(total), float(largest_process), largest_process_name]],
+        }]
         write_points(data)
