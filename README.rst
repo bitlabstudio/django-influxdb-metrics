@@ -110,6 +110,21 @@ columns:
 * ``largest_process_name``: String representing the largest process name
 
 
+influxdb_get_cpu_memory_usage
++++++++++++++++++++++++++++++
+
+This is a wrapper around the two commands above. You will usually want to
+schedule them every minute. Since crontab cannot handle schedules by seconds
+both commands would always start at the same time. As a result, the CPU command
+would measure the CPU usage of the memory command and that would mostly be the
+near 100%. This compound command will execute both the others one after another
+and therefore only appear as one process.
+
+You could schedule it like this::
+
+    * * * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_cpu_memory_usage username_cpu username_memory > $HOME/mylogs/cron/influxdb-get-cpu-memory-usage.log 2>&1
+
+
 influxdb_get_disk_usage
 +++++++++++++++++++++++
 
