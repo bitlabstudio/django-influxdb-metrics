@@ -22,4 +22,5 @@ class Command(BaseCommand):
             'points': [[
                 float(total), float(largest_process), largest_process_name]],
         }]
+        print(data)
         write_points(data)

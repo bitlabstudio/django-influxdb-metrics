@@ -20,4 +20,5 @@ class Command(BaseCommand):
             'name': 'default.server.memory.usage',
             'columns': ['value', 'largest_process', 'largest_process_name'],
             'points': [[total, largest_process, largest_process_name]], }]
+        print(data)
         write_points(data)

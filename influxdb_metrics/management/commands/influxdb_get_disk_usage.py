@@ -19,4 +19,5 @@ class Command(BaseCommand):
             'name': 'default.server.disk.usage',
             'columns': ['value', ],
             'points': [[total, ]], }]
+        print(data)
         write_points(data)

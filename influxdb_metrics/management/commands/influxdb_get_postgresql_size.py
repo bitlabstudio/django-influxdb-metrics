@@ -21,4 +21,5 @@ class Command(BaseCommand):
             'name': 'default.server.postgresql.size',
             'columns': ['value', ],
             'points': [[total, ]], }]
+        print(data)
         write_points(data)

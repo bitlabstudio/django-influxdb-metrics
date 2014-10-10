@@ -1,5 +1,6 @@
 === 0.2.X (ongoing, to be released as 0.3) ===
 
+- Added print statements to all management commands
 - Bugfix: Convertig CPU usage to float before sending to InfluxDB
 - added `path` column to `default.django.request` series
 
