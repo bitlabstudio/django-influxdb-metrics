@@ -40,7 +40,7 @@ install_requires = [
     'django>=1.5',
     'influxdb',
     'tld',
-    'python-server-metrics>=0.1.7',
+    'python-server-metrics>=0.1.8',
 ]
 
 

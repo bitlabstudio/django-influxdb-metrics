@@ -1,6 +1,7 @@
 === 0.2.X (ongoing, to be released as 0.3) ===
 
-- Added `influxdb_get_cpu_memory_usage` command
+- Added `influxdb_get_memcached_usage` command
+- Added `influxdb_get_usage_per_minute` command
 - Added print statements to all management commands
 - Bugfix: Convertig CPU usage to float before sending to InfluxDB
 - added `path` column to `default.django.request` series

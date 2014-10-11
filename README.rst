@@ -110,19 +110,40 @@ columns:
 * ``largest_process_name``: String representing the largest process name
 
 
-influxdb_get_cpu_memory_usage
+influxdb_get_memcached_usage
+++++++++++++++++++++++++++++
+
+Collects memcached ``bytes`` and ``curr_items``.
+
+You can run it like this::
+
+    ./manage.py influxdb_get_memcached_usage ~/memcached.sock 
+
+You could schedule it like this::
+
+    * * * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_memcached_usage ~/memcached.sock > $HOME/mylogs/cron/influxdb-get-memcached-usage.log 2>&1
+
+The series created in your InfluxDB will be named
+``<prefix>default.server.memcached.usage<postfix>`` and will have the following
+columns:
+
+* ``value``: Bytes currently used by memcached 
+* ``curr_items``: Number of items currently used by memcached
+
+
+influxdb_get_usage_per_minute
 +++++++++++++++++++++++++++++
 
-This is a wrapper around the two commands above. You will usually want to
+This is a wrapper around the three commands above. You will usually want to
 schedule them every minute. Since crontab cannot handle schedules by seconds
-both commands would always start at the same time. As a result, the CPU command
+all commands would always start at the same time. As a result, the CPU command
 would measure the CPU usage of the memory command and that would mostly be the
-near 100%. This compound command will execute both the others one after another
+near 100%. This compound command will execute all commands one after another
 and therefore only appear as one process.
 
 You could schedule it like this::
 
-    * * * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_cpu_memory_usage username_cpu username_memory > $HOME/mylogs/cron/influxdb-get-cpu-memory-usage.log 2>&1
+    * * * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_usage_per_minute username_cpu username_memory ~/memcached.sock > $HOME/mylogs/cron/influxdb-get-usage-per-minute.log 2>&1
 
 
 influxdb_get_disk_usage
