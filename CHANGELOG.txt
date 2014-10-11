@@ -1,4 +1,6 @@
-=== 0.2.X (ongoing, to be released as 0.3) ===
+=== 0.3.X (ongoing, to be released as 0.4) ===
+
+=== 0.3 ===
 
 - Added `influxdb_get_memcached_usage` command
 - Added `influxdb_get_usage_per_minute` command
