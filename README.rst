@@ -194,13 +194,13 @@ The series created in your InfluxDB will be named
 * ``value``: The total database size in bytes
 
 
-InfluxDBEmailBackend
+InfluxDbEmailBackend
 ++++++++++++++++++++
 
 If you would like to track tne number of emails sent, you can set your
 `EMAIL_BACKEND`::
 
-    EMAIL_BACKEND = 'influxdb_metrics.email.InfluxDBEmailBackend'
+    EMAIL_BACKEND = 'influxdb_metrics.email.InfluxDbEmailBackend'
 
 When the setting is set, metrics will be sent every time you run ``.manage.py
 send_mail``.
