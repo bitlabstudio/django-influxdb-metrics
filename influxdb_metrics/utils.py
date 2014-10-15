@@ -1,5 +1,6 @@
 """Utilities for working with influxdb."""
 import copy
+from threading import Thread
 
 from django.conf import settings
 
@@ -114,4 +115,16 @@ def write_points(data, apply_prefix=True, apply_postfix=True):
     db = get_db()
     new_data = copy.deepcopy(data)
     new_data = apply_prefix_postfix_to_data(data, apply_prefix, apply_postfix)
-    db.write_points(new_data)
+    thread = Thread(target=write_points_threaded, args=(db, new_data, ))
+    thread.start()
+
+
+def write_points_threaded(db, data):  # pragma: no cover
+    """Method to be called via threading module."""
+    try:
+        db.write_points(data)
+    except Exception, ex:
+        if getattr(settings, 'INFLUXDB_FAIL_SILENTLY', True):
+            pass
+        else:
+            raise ex

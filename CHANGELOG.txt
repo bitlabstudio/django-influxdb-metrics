@@ -1,5 +1,7 @@
 === 0.3.X (ongoing, to be released as 0.4) ===
 
+- Added threading for write_points call
+
 === 0.3 ===
 
 - Added `influxdb_get_memcached_usage` command

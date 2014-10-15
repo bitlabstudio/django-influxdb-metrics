@@ -102,23 +102,34 @@ class WritePointsTestCase(TestCase):
     """Tests for the ``write_points`` method."""
     longMessage = True
 
-    def test_method(self):
-        with patch('influxdb_metrics.utils.get_db') as mock_get_db:
-            data = [{'name': 'series.name', }]
-            utils.write_points(data, False, False)
-            self.assertEqual(
-                mock_get_db.return_value.write_points.call_args[0][0],
-                data,
-                msg=('Should instantiate a client and call the `write_points`'
-                     ' method of that client and should pass in the given'
-                     ' data'))
+    def setUp(self):
+        super(WritePointsTestCase, self).setUp()
+        self.patch_get_db = patch('influxdb_metrics.utils.get_db')
+        self.patch_thread = patch('influxdb_metrics.utils.Thread')
+        self.mock_get_db = self.patch_get_db.start()
+        self.mock_thread = self.patch_thread.start()
 
-            new_data = utils.apply_prefix_postfix_to_data(data)
-            utils.write_points(data)
-            self.assertEqual(
-                mock_get_db.return_value.write_points.call_args[0][0],
-                new_data,
-                msg=('Should apply prefix and postfix to the whole data dict'))
+    def tearDown(self):
+        super(WritePointsTestCase, self).tearDown()
+        self.patch_get_db.stop()
+        self.patch_thread.stop()
+
+    def test_method(self):
+        data = [{'name': 'series.name', }]
+        utils.write_points(data, False, False)
+        self.assertEqual(
+            self.mock_thread.call_args[1]['args'][1],
+            data,
+            msg=('Should instantiate a client and call the `write_points`'
+                 ' method of that client and should pass in the given'
+                 ' data'))
+
+        new_data = utils.apply_prefix_postfix_to_data(data)
+        utils.write_points(data)
+        self.assertEqual(
+            self.mock_thread.call_args[1]['args'][1],
+            new_data,
+            msg=('Should apply prefix and postfix to the whole data dict'))
 
         with self.settings(INFLUXDB_DISABLED=True):
             result = utils.write_points([])
