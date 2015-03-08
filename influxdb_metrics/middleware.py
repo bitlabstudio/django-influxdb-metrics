@@ -1,6 +1,9 @@
 """Middlewares for the influxdb_metrics app."""
 import inspect
 import time
+import urlparse
+
+from django.conf import settings
 
 from tld import get_tld
 from tld.exceptions import TldBadUrl, TldDomainNotFound, TldIOError
@@ -61,6 +64,14 @@ class InfluxDBRequestMiddleware(object):
                     pass
             if referer_tld:
                 referer_tld_string = referer_tld.tld
+
+            url = request.get_full_path()
+            url_query = urlparse.parse_qs(urlparse.urlparse(url).query)
+            campaign_keyword = getattr(
+                settings, 'INFLUXDB_METRICS_CAMPAIGN_KEYWORD', 'campaign')
+            campaign = ''
+            if campaign_keyword in url_query:
+                campaign = url_query[campaign_keyword][0]
             data = [{
                 'name': 'default.django.request',
                 'columns': [
@@ -75,7 +86,8 @@ class InfluxDBRequestMiddleware(object):
                     'referer',
                     'referer_tld',
                     'full_path',
-                    'path'],
+                    'path',
+                    'campaign'],
                 'points': [[
                     ms,
                     is_ajax,
@@ -87,6 +99,7 @@ class InfluxDBRequestMiddleware(object):
                     request._view_name,
                     referer,
                     referer_tld_string,
-                    request.get_full_path(),
-                    request.path], ], }]
+                    url,
+                    request.path,
+                    campaign], ], }]
             write_points(data)

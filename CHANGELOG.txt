@@ -1,6 +1,7 @@
 === 0.3.X (ongoing, to be released as 0.4) ===
 
 - Added threading for write_points call
+- Added tracking of marketing campaigns via URL query parameter
 
 === 0.3 ===
 

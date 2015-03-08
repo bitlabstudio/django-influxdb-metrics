@@ -29,7 +29,7 @@ class InfluxDBRequestMiddlewareTestCase(TestCase):
         self.patch_write_point.stop()
 
     def test_middleware(self):
-        req = RequestFactory().get('/')
+        req = RequestFactory().get('/?campaign=bingo')
         req.META['HTTP_REFERER'] = 'http://google.co.uk/foobar/'
         req.user = AnonymousUser()
         mware = InfluxDBRequestMiddleware()
@@ -39,6 +39,10 @@ class InfluxDBRequestMiddlewareTestCase(TestCase):
             self.mock_write_points.call_args[0][0][0]['points'][0][9],
             'google.co.uk',
             msg=('Should correctly determine referer_tld'))
+        self.assertEqual(
+            self.mock_write_points.call_args[0][0][0]['points'][0][12],
+            'bingo',
+            msg=('Should correctly determine campaign query parameter'))
 
         req = RequestFactory().get('/')
         req.META['HTTP_REFERER'] = 'http://google.co.uk/foobar/'
