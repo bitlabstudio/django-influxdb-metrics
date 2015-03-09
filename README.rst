@@ -238,6 +238,9 @@ The series created in your InfluxDB will be named
      and regards ``google.co.uk`` as a top level domain (instead of ``co.uk``)
 * ``full_path``: The full path that was requested
 * ``path``: The path without GET params that was requested
+* ``campaign``: A value that is extracted from the GET-parameter `campaign`,
+  if present. You can change the name of this keyword from `campaign` to
+  anything via the setting `INFLUXDB_METRICS_CAMPAIGN_KEYWORD`.
 
 If you have a highly frequented site, this table could get big really quick.
 You should make sure to create a shard with a low retention time for this
