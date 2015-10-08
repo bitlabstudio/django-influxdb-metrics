@@ -30,10 +30,11 @@ class InfluxdbGetPostgresqlSizeTestCase(TestCase):
         write_points_call_args = self.mock_write_points.call_args[0][0]
         get_database_size_call_args = \
             self.mock_get_database_size.call_args[0]
+
         self.assertEqual(
-            write_points_call_args[0]['columns'],
-            ['value', ],
-            msg=('Should construct a data dict with the correct columns'))
+            write_points_call_args[0]['measurement'],
+            'postgresql_size', msg=(
+                'Should construct a data dict with the correct columns'))
         self.assertEqual(
             get_database_size_call_args,
             ('db_role', 'db_user'),

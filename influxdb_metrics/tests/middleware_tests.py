@@ -15,10 +15,7 @@ class InfluxDBRequestMiddlewareTestCase(TestCase):
         super(InfluxDBRequestMiddlewareTestCase, self).setUp()
         self.patch_write_points = patch(
             'influxdb_metrics.middleware.write_points')
-        self.patch_write_point = patch(
-            'influxdb_metrics.models.write_point')
         self.mock_write_points = self.patch_write_points.start()
-        self.mock_write_point = self.patch_write_point.start()
         self.staff = User.objects.create(username='staff', is_staff=True)
         self.superuser = User.objects.create(
             username='superuser', is_superuser=True)
@@ -26,7 +23,6 @@ class InfluxDBRequestMiddlewareTestCase(TestCase):
     def tearDown(self):
         super(InfluxDBRequestMiddlewareTestCase, self).tearDown()
         self.patch_write_points.stop()
-        self.patch_write_point.stop()
 
     def test_middleware(self):
         req = RequestFactory().get('/?campaign=bingo')
@@ -35,12 +31,13 @@ class InfluxDBRequestMiddlewareTestCase(TestCase):
         mware = InfluxDBRequestMiddleware()
         mware.process_view(req, 'view_funx', 'view_args', 'view_kwargs')
         mware.process_exception(req, None)
+
         self.assertEqual(
-            self.mock_write_points.call_args[0][0][0]['points'][0][9],
+            self.mock_write_points.call_args[0][0][0]['tags']['referer_tld'],
             'google.co.uk',
             msg=('Should correctly determine referer_tld'))
         self.assertEqual(
-            self.mock_write_points.call_args[0][0][0]['points'][0][12],
+            self.mock_write_points.call_args[0][0][0]['tags']['campaign'],
             'bingo',
             msg=('Should correctly determine campaign query parameter'))
 
@@ -51,7 +48,7 @@ class InfluxDBRequestMiddlewareTestCase(TestCase):
         mware.process_view(req, 'view_funx', 'view_args', 'view_kwargs')
         mware.process_response(req, None)
         self.assertEqual(
-            self.mock_write_points.call_args[0][0][0]['points'][0][9],
+            self.mock_write_points.call_args[0][0][0]['tags']['referer_tld'],
             'google.co.uk',
             msg=('Should also work for successful responses'))
 
@@ -62,6 +59,6 @@ class InfluxDBRequestMiddlewareTestCase(TestCase):
         mware.process_view(req, 'view_funx', 'view_args', 'view_kwargs')
         mware.process_response(req, None)
         self.assertEqual(
-            self.mock_write_points.call_args[0][0][0]['points'][0][9],
+            self.mock_write_points.call_args[0][0][0]['tags']['referer_tld'],
             'google.co.uk',
             msg=('Should also work for ajax requests'))
