@@ -1,4 +1,5 @@
 """Collects the current memory usage and sends it to influxdb."""
+from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError  # NOQA
 
 from server_metrics.postgresql import get_database_size
@@ -18,8 +19,9 @@ class Command(BaseCommand):
             db_name = args[1]
         total = get_database_size(db_role, db_name)
         data = [{
-            'name': 'default.server.postgresql.size',
-            'columns': ['value', ],
-            'points': [[total, ]], }]
+            'measurement': 'postgresql_size',
+            'tags': {'host': settings.INFLUXDB_TAGS_HOST, },
+            'fields': {'value': total, },
+        }]
         print(data)
         write_points(data)

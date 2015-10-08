@@ -3,6 +3,11 @@ Django InfluxDB Metrics
 
 A reusable Django app that sends metrics about your project to InfluxDB.
 
+IMPORTANT NOTE: This release only supports InfluxDB >= 0.9. We have also dropped
+a few measurements like CPU, memory and disk-space because
+[Telegraf](https://github.com/influxdb/telegraf) can collect these in a much
+much better way.
+
 Installation
 ------------
 
@@ -38,9 +43,10 @@ You need to set the following settings::
     INFLUXDB_PASSWORD = 'yourpassword'
     INFLUXDB_DATABASE = 'yourdatabase'
 
-    # Optional:
-    INFLUXDB_SERIES_PREFIX = 'yourservername.'
-    INFLUXDB_SERIES_POSTFIX = '.whatever'
+    # This is for tagging the data sent to your influxdb instance so that you
+    # can query by host
+    INFLUXDB_TAGS_HOST = 'your_hostname'
+
 
 If you would like to disable sending of metrics (i.e. for local development),
 you can set::
@@ -55,122 +61,6 @@ The app comes with several management commands which you should schedule via
 crontab.
 
 
-influxdb_get_memory_usage
-+++++++++++++++++++++++++
-
-Collects the total memory of your user, plus the memory and name of the largest
-process.
-
-You can run it like this::
-
-    ./manage.py influxdb_get_memory_usage
-    ./manage.py influxdb_get_memory_usage username
-
-If you don't provide a username, total memory for all users will be collected.
-This might not be desirable on a shared hosting environment where you can see
-all user's processes.
-
-You could schedule it like this::
-
-    * * * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_memory_usage username > $HOME/mylogs/cron/influxdb-get-memory-usage.log 2>&1
-
-The series created in your InfluxDB will be named
-``<prefix>default.server.memory.usage<postfix>`` and will have the following columns:
-
-* ``value``: The total memory usage in bytes
-* ``largest_process``: Memory usage of the largest process in bytes
-* ``largest_process_name``: String representing the largest process name
-
-
-influxdb_get_cpu_usage
-++++++++++++++++++++++
-
-Collects the total %CPU for the given user, plus the %CPU and name of the
-largest process.
-
-You can run it like this::
-
-    ./manage.py influxdb_get_cpu_usage
-    ./manage.py influxdb_get_cpu_usage username
-
-If you don't provide a username, total %CPU for all users will be collected.
-This might not be desirable on a shared hosting environment where you can see
-all user's processes.
-
-You could schedule it like this::
-
-    * * * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_cpu_usage username > $HOME/mylogs/cron/influxdb-get-cpu-usage.log 2>&1
-
-The series created in your InfluxDB will be named
-``<prefix>default.server.cpu.usage<postfix>`` and will have the following
-columns:
-
-* ``value``: The total %CPU
-* ``largest_process``: %CPU of the largest process
-* ``largest_process_name``: String representing the largest process name
-
-
-influxdb_get_memcached_usage
-++++++++++++++++++++++++++++
-
-Collects memcached ``bytes`` and ``curr_items``.
-
-You can run it like this::
-
-    ./manage.py influxdb_get_memcached_usage ~/memcached.sock 
-
-You could schedule it like this::
-
-    * * * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_memcached_usage ~/memcached.sock > $HOME/mylogs/cron/influxdb-get-memcached-usage.log 2>&1
-
-The series created in your InfluxDB will be named
-``<prefix>default.server.memcached.usage<postfix>`` and will have the following
-columns:
-
-* ``value``: Bytes currently used by memcached 
-* ``curr_items``: Number of items currently used by memcached
-
-
-influxdb_get_usage_per_minute
-+++++++++++++++++++++++++++++
-
-This is a wrapper around the three commands above. You will usually want to
-schedule them every minute. Since crontab cannot handle schedules by seconds
-all commands would always start at the same time. As a result, the CPU command
-would measure the CPU usage of the memory command and that would mostly be the
-near 100%. This compound command will execute all commands one after another
-and therefore only appear as one process.
-
-You could schedule it like this::
-
-    * * * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_usage_per_minute username_cpu username_memory ~/memcached.sock > $HOME/mylogs/cron/influxdb-get-usage-per-minute.log 2>&1
-
-
-influxdb_get_disk_usage
-+++++++++++++++++++++++
-
-Collects the total disk usage for the given path.
-
-NOTE: This faciliates the ``du`` command with the ``--block-size`` flag,
-therefore it doesn't work on OSX.
-
-You can run it like this::
-
-    ./manage.py influxdb_get_disk_usage $HOME
-
-You should give an absolute path to the folder which you want to measure. On a
-shared hosting environment this would probably be your home folder.
-
-You could schedule it like this::
-
-    0 */1 * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_disk_usage $HOME > $HOME/mylogs/cron/influxdb-get-disk-usage.log 2>&1
-
-The series created in your InfluxDB will be named
-``<prefix>default.server.disk.usage<postfix>`` and will have the following columns:
-
-* ``value``: The total memory usage in bytes
-
-
 influxdb_get_postgresql_size
 ++++++++++++++++++++++++++++
 
@@ -180,7 +70,7 @@ You can run it like this::
 
     ./manage.py influxdb_get_postgresql_size db_role db_name
 
-You shoudl provide role and name for the database you want to measure. Make
+You should provide role and name for the database you want to measure. Make
 sure that you have a ``.pgpass`` file in place so that you don't need to enter
 a password for this user.
 
@@ -188,8 +78,8 @@ You could schedule it like this::
 
     0 */1 * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_postgresql_size db_role db_name > $HOME/mylogs/cron/influxdb-get-postgresql-size.log 2>&1
 
-The series created in your InfluxDB will be named
-`<prefix>default.server.postgresql.size<postfix>` and will have the following columns:
+The measurement created in your InfluxDB will be named `postgresql_size` and
+will have the following fields:
 
 * ``value``: The total database size in bytes
 
@@ -197,7 +87,7 @@ The series created in your InfluxDB will be named
 InfluxDbEmailBackend
 ++++++++++++++++++++
 
-If you would like to track tne number of emails sent, you can set your
+If you would like to track the number of emails sent, you can set your
 `EMAIL_BACKEND`::
 
     EMAIL_BACKEND = 'influxdb_metrics.email.InfluxDbEmailBackend'
@@ -205,8 +95,8 @@ If you would like to track tne number of emails sent, you can set your
 When the setting is set, metrics will be sent every time you run ``.manage.py
 send_mail``.
 
-The series created in your InfluxDB will be named
-``<prefix>default.django.email.sent<postfix>`` and will have the following columns:
+The measurement created in your InfluxDB will be named ``django_email_sent``
+and will have the following fields:
 
 * ``value``: The number of emails sent
 
@@ -222,10 +112,13 @@ the ``InfluxDBRequestMiddleware`` at the top of your ``MIDDLEWARE_CLASSES``::
         ...
     ]
 
-The series created in your InfluxDB will be named
-``<prefix>default.django.request<postfix>`` and will have the following columns:
+The measurement created in your InfluxDB will be named ``django.request`` and
+will have the following fields:
 
 * ``value``: The request time in milliseconds.
+
+Additionally, it will have the following tags:
+
 * ``is_ajax``: `true` if it was an AJAX request, otherwise `false`
 * ``is_authenticated``: `true` if user was authenticated, otherwise `false`
 * ``is_staff``: `true` if user was a staff user, otherwise `false`
@@ -256,28 +149,26 @@ It would probably wise to consider something like statsd to aggregate the
 requests first and then send them to InfluxDB in bulk.
 
 
-Tracking User Count
-+++++++++++++++++++
+Tracking Users
+++++++++++++++
 
 This app's ``models.py`` contains a ``post_save`` and a ``post_delete`` handler
 which will detect when a user is created or deleted.
 
-It will create three series in your InfluxDB:
+It will create three measurements in your InfluxDB:
 
-The first one will be named
-``<prefix>default.django.auth.user.create<postfix>`` and will have the
-following columns:
-
-* ``value``: 1 
-
-The second one will be named
-``<prefix>default.django.auth.user.delete<postfix>`` and will have the
-following columns:
+The first one will be named ``django_auth_user_create`` and will have the
+following fields:
 
 * ``value``: 1
 
-The third one will be named ``<prefix>default.django.auth.user.count<postfix>``
-and will have the following columns:
+The second one will be named ``django_auth_user_delete`` and will have the
+following fields:
+
+* ``value``: 1
+
+The third one will be named ``django_auth_user_count`` and will have the
+following fields:
 
 * ``value``: The total number of users in the database
 
@@ -287,9 +178,8 @@ Tracking User Logins
 
 This app's ``models.py`` contains a handler for the ``user_logged_in`` signal.
 
-The series created in your InfluxDB will be named
-``<prefix>default.django.auth.user.login<postfix>`` and will have the following
-columns:
+The measurement created in your InfluxDB will be named
+``django_auth_user_login`` and will have the following fields:
 
 * ``value``: 1
 

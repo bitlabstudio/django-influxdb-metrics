@@ -67,39 +67,32 @@ class InfluxDBRequestMiddleware(object):
 
             url = request.get_full_path()
             url_query = urlparse.parse_qs(urlparse.urlparse(url).query)
+
+            # This allows you to measure click rates for ad-campaigns, just
+            # make sure that your ads have `?campaign=something` in the URL
             campaign_keyword = getattr(
                 settings, 'INFLUXDB_METRICS_CAMPAIGN_KEYWORD', 'campaign')
             campaign = ''
             if campaign_keyword in url_query:
                 campaign = url_query[campaign_keyword][0]
+
             data = [{
-                'name': 'default.django.request',
-                'columns': [
-                    'value',
-                    'is_ajax',
-                    'is_authenticated',
-                    'is_staff',
-                    'is_superuser',
-                    'method',
-                    'module',
-                    'view',
-                    'referer',
-                    'referer_tld',
-                    'full_path',
-                    'path',
-                    'campaign'],
-                'points': [[
-                    ms,
-                    is_ajax,
-                    is_authenticated,
-                    is_staff,
-                    is_superuser,
-                    request.method,
-                    request._view_module,
-                    request._view_name,
-                    referer,
-                    referer_tld_string,
-                    url,
-                    request.path,
-                    campaign], ], }]
+                'measurement': 'django_request',
+                'tags': {
+                    'host': settings.INFLUXDB_TAGS_HOST,
+                    'is_ajax': is_ajax,
+                    'is_authenticated': is_authenticated,
+                    'is_staff': is_staff,
+                    'is_superuser': is_superuser,
+                    'method': request.method,
+                    'module': request._view_module,
+                    'view': request._view_name,
+                    'referer': referer,
+                    'referer_tld': referer_tld_string,
+                    'full_path': url,
+                    'path': request.path,
+                    'campaign': campaign,
+                },
+                'fields': {'value': ms, },
+            }]
             write_points(data)
