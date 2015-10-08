@@ -1,5 +1,7 @@
 === (ongoing) ===
 
+=== 1.1.0 ===
+
 - Added setting INFLUXDB_POSTGRESQL_USE_LOCALHOST
 - Added mandatory setting INFLUXDB_TIMEOUT (seconds as integer)
 - Added setting INFLUXDB_USE_THREADING which defaults to False
