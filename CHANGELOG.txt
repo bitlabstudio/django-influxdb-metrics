@@ -1,4 +1,6 @@
-=== 1.0.1 (ongoing, to be released as 1.0.X) ===
+=== (ongoing) ===
+
+=== 1.0.0 ===
 
 - BREAKING CHANGES
 - Only supporting InfluxDB >= 0.9 now
