@@ -37,11 +37,12 @@ def write_points(data):
         return
 
     client = get_client()
-    if getattr(settings, 'INFLUXDB_USE_THREADING', False):
-        client.write_points(data)
-    else:
+    use_threading = getattr(settings, 'INFLUXDB_USE_THREADING', False)
+    if use_threading == True:
         thread = Thread(target=write_points_threaded, args=(client, data, ))
         thread.start()
+    else:
+        client.write_points(data)
 
 
 def write_points_threaded(client, data):  # pragma: no cover
