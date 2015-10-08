@@ -17,7 +17,9 @@ class Command(BaseCommand):
         if args:
             db_role = args[0]
             db_name = args[1]
-        total = get_database_size(db_role, db_name)
+        use_localhost = getattr(
+            settings, 'INFLUXDB_POSTGRESQL_USE_LOCALHOST', False)
+        total = get_database_size(db_role, db_name, localhost=use_localhost)
         data = [{
             'measurement': 'postgresql_size',
             'tags': {'host': settings.INFLUXDB_TAGS_HOST, },

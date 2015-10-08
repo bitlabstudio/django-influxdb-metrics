@@ -1,5 +1,7 @@
 === (ongoing) ===
 
+- Added setting INFLUXDB_POSTGRESQL_USE_LOCALHOST
+
 === 1.0.0 ===
 
 - BREAKING CHANGES

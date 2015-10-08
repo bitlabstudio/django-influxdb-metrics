@@ -53,6 +53,11 @@ you can set::
 
     INFLUXDB_DISABLED = True
 
+If you are having trouble getting the postgresql database size, you might need
+to set::
+
+    INFLUXDB_POSTGRESQL_USE_LOCALHOST = True
+
 
 Usage
 -----
