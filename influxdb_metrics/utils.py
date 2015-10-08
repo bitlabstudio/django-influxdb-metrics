@@ -15,6 +15,7 @@ def get_client():
         settings.INFLUXDB_USER,
         settings.INFLUXDB_PASSWORD,
         settings.INFLUXDB_DATABASE,
+        timeout=settings.INFLUXDB_TIMEOUT
     )
 
 
@@ -36,8 +37,11 @@ def write_points(data):
         return
 
     client = get_client()
-    thread = Thread(target=write_points_threaded, args=(client, data, ))
-    thread.start()
+    if getattr(settings, 'INFLUXDB_USE_THREADING', False):
+        client.write_points(data)
+    else:
+        thread = Thread(target=write_points_threaded, args=(client, data, ))
+        thread.start()
 
 
 def write_points_threaded(client, data):  # pragma: no cover
