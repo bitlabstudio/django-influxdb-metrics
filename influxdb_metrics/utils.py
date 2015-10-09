@@ -25,12 +25,15 @@ def query(query, time_precision='s', chunked=False):
     return client.query(query, time_precision=time_precision, chunked=chunked)
 
 
-def write_points(data):
+def write_points(data, force_disable_threading=False):
     """
     Writes a series to influxdb.
 
     :param data: Array of dicts, as required by
       https://github.com/influxdb/influxdb-python
+    :param force_disable_threading: When being called from the Celery task, we
+      set this to `True` so that the user doesn't accidentally use Celery and
+      threading at the same time.
 
     """
     if getattr(settings, 'INFLUXDB_DISABLED', False):
@@ -38,6 +41,8 @@ def write_points(data):
 
     client = get_client()
     use_threading = getattr(settings, 'INFLUXDB_USE_THREADING', False)
+    if force_disable_threading:
+        use_threading = False
     if use_threading == True:
         thread = Thread(target=write_points_threaded, args=(client, data, ))
         thread.start()

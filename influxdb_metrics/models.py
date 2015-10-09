@@ -1,11 +1,13 @@
 """Models and signal handlers for the influxdb_metrics app."""
+import datetime
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.signals import user_logged_in
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
-from .utils import write_points
+from .loader import write_points
 
 
 @receiver(user_logged_in)  # pragma: no cover
@@ -14,6 +16,7 @@ def user_logged_in_handler(sender, **kwargs):
         'measurement': 'django_auth_user_login',
         'tags': {'host': settings.INFLUXDB_TAGS_HOST, },
         'fields': {'value': 1, },
+        'time': datetime.datetime.now().isoformat(),
     }]
     write_points(data)
 
@@ -25,6 +28,7 @@ def user_post_delete_handler(sender, **kwargs):
         'measurement': 'django_auth_user_delete',
         'tags': {'host': settings.INFLUXDB_TAGS_HOST, },
         'fields': {'value': 1, },
+        'time': datetime.datetime.now().isoformat(),
     }]
     write_points(data)
 
@@ -32,6 +36,7 @@ def user_post_delete_handler(sender, **kwargs):
         'measurement': 'django_auth_user_count',
         'tags': {'host': settings.INFLUXDB_TAGS_HOST, },
         'fields': {'value': total, },
+        'time': datetime.datetime.now().isoformat(),
     }]
     write_points(data)
 post_delete.connect(user_post_delete_handler, sender=settings.AUTH_USER_MODEL)
@@ -45,6 +50,7 @@ def user_post_save_handler(**kwargs):
             'measurement': 'django_auth_user_create',
             'tags': {'host': settings.INFLUXDB_TAGS_HOST, },
             'fields': {'value': 1, },
+            'time': datetime.datetime.now().isoformat(),
         }]
         write_points(data)
 
@@ -52,6 +58,7 @@ def user_post_save_handler(**kwargs):
             'measurement': 'django_auth_user_count',
             'tags': {'host': settings.INFLUXDB_TAGS_HOST, },
             'fields': {'value': total, },
+            'time': datetime.datetime.now().isoformat(),
         }]
         write_points(data)
 post_save.connect(user_post_save_handler, sender=settings.AUTH_USER_MODEL)

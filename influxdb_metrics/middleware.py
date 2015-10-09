@@ -1,4 +1,5 @@
 """Middlewares for the influxdb_metrics app."""
+import datetime
 import inspect
 import time
 import urlparse
@@ -8,7 +9,7 @@ from django.conf import settings
 from tld import get_tld
 from tld.exceptions import TldBadUrl, TldDomainNotFound, TldIOError
 
-from .utils import write_points
+from .loader import write_points
 
 
 class InfluxDBRequestMiddleware(object):
@@ -94,5 +95,6 @@ class InfluxDBRequestMiddleware(object):
                     'campaign': campaign,
                 },
                 'fields': {'value': ms, },
+                'time': datetime.datetime.now().isoformat(),
             }]
             write_points(data)

@@ -1,8 +1,10 @@
 """Custom email backends for the influxdb_metrics app."""
+import datetime
+
 from django.core.mail.backends.smtp import EmailBackend
 from django.conf import settings
 
-from .utils import write_points
+from .loader import write_points
 
 
 class InfluxDbEmailBackend(EmailBackend):
@@ -18,6 +20,7 @@ class InfluxDbEmailBackend(EmailBackend):
                 'measurement': 'django_email_sent',
                 'tags': {'host': settings.INFLUXDB_TAGS_HOST, },
                 'fields': {'value': num_sent, },
+                'time': datetime.datetime.now().isoformat(),
             }]
             write_points(data)
         return num_sent

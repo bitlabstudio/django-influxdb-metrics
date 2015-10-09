@@ -15,7 +15,16 @@ class InfluxDBRequestMiddlewareTestCase(TestCase):
         super(InfluxDBRequestMiddlewareTestCase, self).setUp()
         self.patch_write_points = patch(
             'influxdb_metrics.middleware.write_points')
+        self.patch_write_points2 = patch(
+            'influxdb_metrics.models.write_points')
+        self.patch_write_points3 = patch(
+            'influxdb_metrics.loader.write_points')
+        self.patch_write_points4 = patch(
+            'influxdb_metrics.utils.write_points')
         self.mock_write_points = self.patch_write_points.start()
+        self.mock_write_points2 = self.patch_write_points2.start()
+        self.mock_write_points3 = self.patch_write_points3.start()
+        self.mock_write_points4 = self.patch_write_points4.start()
         self.staff = User.objects.create(username='staff', is_staff=True)
         self.superuser = User.objects.create(
             username='superuser', is_superuser=True)
@@ -23,6 +32,9 @@ class InfluxDBRequestMiddlewareTestCase(TestCase):
     def tearDown(self):
         super(InfluxDBRequestMiddlewareTestCase, self).tearDown()
         self.patch_write_points.stop()
+        self.patch_write_points2.stop()
+        self.patch_write_points3.stop()
+        self.patch_write_points4.stop()
 
     def test_middleware(self):
         req = RequestFactory().get('/?campaign=bingo')

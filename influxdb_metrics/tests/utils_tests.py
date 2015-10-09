@@ -1,9 +1,10 @@
+import ipdb
 """Tests for the utils module of the influxdb_metrics app."""
 import copy
 
 from django.test import TestCase
 
-from mock import patch
+from mock import Mock, patch
 
 from .. import utils
 reload(utils)
@@ -50,13 +51,15 @@ class WritePointsTestCase(TestCase):
         data = [{
             'measurement': 'series.name',
         }]
-        utils.write_points(data)
-        self.assertEqual(
-            self.mock_thread.call_args[1]['args'][1],
-            data,
-            msg=('Should instantiate a client and call the `write_points`'
-                 ' method of that client and should pass in the given'
-                 ' data'))
+
+        with self.settings(INFLUXDB_USE_THREADING=True):
+            utils.write_points(data)
+            self.assertEqual(
+                self.mock_thread.call_args[1]['args'][1],
+                data,
+                msg=('Should instantiate a client and call the `write_points`'
+                     ' method of that client and should pass in the given'
+                     ' data'))
 
         with self.settings(INFLUXDB_DISABLED=True):
             result = utils.write_points([])

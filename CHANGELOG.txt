@@ -1,5 +1,9 @@
 === (ongoing) ===
 
+- Added setting INFLUXDB_USE_CELERY
+- If celery can be imported and if the setting is set to True, `write_points`
+  will be called as a delayed celery task
+
 === 1.1.0 ===
 
 - Added setting INFLUXDB_POSTGRESQL_USE_LOCALHOST

@@ -37,6 +37,7 @@ dev_requires = [
 ]
 
 install_requires = [
+    'celery>=3.0.0',
     'django>=1.5',
     'influxdb>=2.9.1',
     'tld',

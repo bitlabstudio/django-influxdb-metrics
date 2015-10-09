@@ -8,6 +8,12 @@ a few measurements like CPU, memory and disk-space because
 [Telegraf](https://github.com/influxdb/telegraf) can collect these in a much
 much better way.
 
+Prerequisites
+-------------
+
+This module has celery as a dependeny but you don't have to use it, if you
+don't want to.
+
 Installation
 ------------
 
@@ -47,6 +53,14 @@ You need to set the following settings::
     # can query by host
     INFLUXDB_TAGS_HOST = 'your_hostname'
 
+    # Seconds to wait for the request to the influxdb server before timing out
+    INFLUXDB_TIMEOUT = 5
+
+    # Set this to True if you are using Celery
+    INFLUXDB_USE_CELERY = True
+
+    # Set this to True if you are not using Celery
+    INFLUXDB_USE_THREADING = False
 
 If you would like to disable sending of metrics (i.e. for local development),
 you can set::
