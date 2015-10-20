@@ -1,5 +1,4 @@
 """Utilities for working with influxdb."""
-import copy
 from threading import Thread
 
 from django.conf import settings
@@ -15,7 +14,9 @@ def get_client():
         settings.INFLUXDB_USER,
         settings.INFLUXDB_PASSWORD,
         settings.INFLUXDB_DATABASE,
-        timeout=settings.INFLUXDB_TIMEOUT
+        timeout=settings.INFLUXDB_TIMEOUT,
+        ssl=getattr(settings, 'INFLUXDB_SSL', False),
+        verify_ssl=getattr(settings, 'INFLUXDB_VERIFY_SSL', False),
     )
 
 
@@ -43,7 +44,7 @@ def write_points(data, force_disable_threading=False):
     use_threading = getattr(settings, 'INFLUXDB_USE_THREADING', False)
     if force_disable_threading:
         use_threading = False
-    if use_threading == True:
+    if use_threading is True:
         thread = Thread(target=write_points_threaded, args=(client, data, ))
         thread.start()
     else:
