@@ -74,7 +74,7 @@ to set::
 
 Use ssl with INFLUXDB_HOST::
 
-    INFLUXDB_SLL = True # default is False
+    INFLUXDB_SSL = True # default is False
 
 Optional with ssl::
 
