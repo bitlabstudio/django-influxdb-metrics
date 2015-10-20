@@ -1,5 +1,6 @@
 === (ongoing) ===
 
+- Add INFLUXDB_SSL and INFLUXDB_SSL_VERIFY settings when creating InfluxDBClient
 - Added setting INFLUXDB_USE_CELERY
 - If celery can be imported and if the setting is set to True, `write_points`
   will be called as a delayed celery task

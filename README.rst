@@ -72,6 +72,14 @@ to set::
 
     INFLUXDB_POSTGRESQL_USE_LOCALHOST = True
 
+Use ssl with INFLUXDB_HOST::
+
+    INFLUXDB_SLL = True # default is False
+
+Optional with ssl::
+
+    INFLUXDB_VERIFY_SSL = True # default is False
+        
 
 Usage
 -----
