@@ -2,7 +2,7 @@
 import datetime
 import inspect
 import time
-import urlparse
+from six.moves import urlparse
 
 from django.conf import settings
 

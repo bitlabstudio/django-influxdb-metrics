@@ -42,6 +42,7 @@ install_requires = [
     'influxdb>=2.9.1',
     'tld',
     'python-server-metrics>=0.1.9',
+    'six'
 ]
 
 
