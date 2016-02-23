@@ -55,8 +55,8 @@ def write_points_threaded(client, data):  # pragma: no cover
     """Method to be called via threading module."""
     try:
         client.write_points(data)
-    except Exception, ex:
+    except Exception:
         if getattr(settings, 'INFLUXDB_FAIL_SILENTLY', True):
             pass
         else:
-            raise ex
+            raise
