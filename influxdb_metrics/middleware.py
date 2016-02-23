@@ -2,7 +2,7 @@
 import datetime
 import inspect
 import time
-from six.moves import urlparse
+from six.moves.urllib import parse
 
 from django.conf import settings
 
@@ -67,7 +67,7 @@ class InfluxDBRequestMiddleware(object):
                 referer_tld_string = referer_tld.tld
 
             url = request.get_full_path()
-            url_query = urlparse.parse_qs(urlparse.urlparse(url).query)
+            url_query = parse.parse_qs(parse.urlparse(url).query)
 
             # This allows you to measure click rates for ad-campaigns, just
             # make sure that your ads have `?campaign=something` in the URL
