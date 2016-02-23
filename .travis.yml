@@ -9,7 +9,5 @@ install:
 script:
   - cd influxdb_metrix/tests
   - py.test .
-  - mv .coverage ../../
-  - cd ../../
 after_success: 
   - coveralls
