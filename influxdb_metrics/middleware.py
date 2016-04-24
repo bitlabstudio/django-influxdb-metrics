@@ -2,7 +2,10 @@
 import datetime
 import inspect
 import time
-import urlparse
+try:
+    from urllib import parse
+except ImportError:
+    import urlparse as parse
 
 from django.conf import settings
 
@@ -61,13 +64,13 @@ class InfluxDBRequestMiddleware(object):
             if referer:
                 try:
                     referer_tld = get_tld(referer, as_object=True)
-                except (TldBadUrl, TldDomainNotFound, TldIOError):  # pragma: no cover
+                except (TldBadUrl, TldDomainNotFound, TldIOError):
                     pass
             if referer_tld:
                 referer_tld_string = referer_tld.tld
 
             url = request.get_full_path()
-            url_query = urlparse.parse_qs(urlparse.urlparse(url).query)
+            url_query = parse.parse_qs(parse.urlparse(url).query)
 
             # This allows you to measure click rates for ad-campaigns, just
             # make sure that your ads have `?campaign=something` in the URL

@@ -1,13 +1,9 @@
-import ipdb
 """Tests for the utils module of the influxdb_metrics app."""
-import copy
-
 from django.test import TestCase
 
-from mock import Mock, patch
+from mock import patch
 
 from .. import utils
-reload(utils)
 
 
 class GetClientTestCase(TestCase):

@@ -32,13 +32,9 @@ from setuptools import setup, find_packages
 import influxdb_metrics as app
 
 
-dev_requires = [
-    'flake8',
-]
-
 install_requires = [
     'celery>=3.0.0',
-    'django>=1.5',
+    'django>=1.7',
     'influxdb>=2.9.1',
     'tld',
     'python-server-metrics>=0.1.9',
@@ -65,7 +61,4 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=install_requires,
-    extras_require={
-        'dev': dev_requires,
-    },
 )

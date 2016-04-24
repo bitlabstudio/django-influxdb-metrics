@@ -1,10 +1,8 @@
 """Settings that need to be set in order to run the tests."""
 import os
-import logging
+
 
 DEBUG = True
-
-logging.getLogger("factory").setLevel(logging.WARN)
 
 SITE_ID = 1
 
@@ -28,9 +26,17 @@ STATICFILES_DIRS = (
     os.path.join(APP_ROOT, 'static'),
 )
 
-TEMPLATE_DIRS = (
-    os.path.join(APP_ROOT, 'tests/test_app/templates'),
-)
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'APP_DIRS': True,
+    'DIRS': [os.path.join(APP_ROOT, 'tests/test_app/templates')],
+    'OPTIONS': {
+        'context_processors': (
+            'django.contrib.auth.context_processors.auth',
+            'django.template.context_processors.request',
+        )
+    }
+}]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -44,13 +50,6 @@ MIDDLEWARE_CLASSES = (
 
 EMAIL_BACKEND = 'influxdb_metrics.email.InfluxDBEmailBackend'
 
-COVERAGE_REPORT_HTML_OUTPUT_DIR = os.path.join(
-    os.path.join(APP_ROOT, 'tests/coverage'))
-COVERAGE_MODULE_EXCLUDES = [
-    'tests$', 'settings$', 'urls$', 'locale$',
-    'migrations', 'fixtures', 'admin$', 'django_extensions',
-]
-
 EXTERNAL_APPS = [
     'django.contrib.admin',
     'django.contrib.admindocs',
@@ -61,7 +60,6 @@ EXTERNAL_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'django.contrib.sites',
-    'django_nose',
 ]
 
 INTERNAL_APPS = [
@@ -69,7 +67,6 @@ INTERNAL_APPS = [
 ]
 
 INSTALLED_APPS = EXTERNAL_APPS + INTERNAL_APPS
-COVERAGE_MODULE_EXCLUDES += EXTERNAL_APPS
 
 SECRET_KEY = 'foobar'
 

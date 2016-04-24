@@ -11,7 +11,7 @@ much better way.
 Prerequisites
 -------------
 
-This module has celery as a dependeny but you don't have to use it, if you
+This module has celery as a dependency but you don't have to use it, if you
 don't want to.
 
 Installation
@@ -79,7 +79,7 @@ Use ssl with INFLUXDB_HOST::
 Optional with ssl::
 
     INFLUXDB_VERIFY_SSL = True # default is False
-        
+
 
 Usage
 -----
