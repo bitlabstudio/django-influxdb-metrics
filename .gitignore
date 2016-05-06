@@ -6,3 +6,4 @@ db.sqlite
 dist/
 docs/_build/
 .tox/
+*.swp
