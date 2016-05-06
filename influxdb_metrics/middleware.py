@@ -1,5 +1,4 @@
 """Middlewares for the influxdb_metrics app."""
-import datetime
 import inspect
 import time
 try:
@@ -98,6 +97,5 @@ class InfluxDBRequestMiddleware(object):
                     'campaign': campaign,
                 },
                 'fields': {'value': ms, },
-                'time': datetime.datetime.now().isoformat(),
             }]
             write_points(data)
