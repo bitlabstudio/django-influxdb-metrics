@@ -60,10 +60,10 @@ You need to set the following settings::
 
 You can custom metics you want to log::
 
-    INFLUX_REQUEST_METRICS = ['is_ajax', 'method', 'path', '_view_module', '_view_name']
-    INFLUX_USER_METRICS = ['is_authenticated', 'is_staff', 'is_superuser']
-    INFLUX_HEADER_METRICS = ['HTTP_REFERER', "HTTP_USER_AGENT"]
-    INFLUX_RESPONSE_METRICS = ['status_code']
+    INFLUXDB_REQUEST_METRICS = ['is_ajax', 'method', 'path', '_view_module', '_view_name']
+    INFLUXDB_USER_METRICS = ['id', 'is_authenticated', 'is_staff', 'is_superuser']
+    INFLUXDB_HEADER_METRICS = ['HTTP_REFERER', "HTTP_USER_AGENT", "REMOTE_ADDRESS"]
+    INFLUXDB_RESPONSE_METRICS = ['status_code']
 
 
 If you would like to disable sending of metrics (i.e. for local development),
