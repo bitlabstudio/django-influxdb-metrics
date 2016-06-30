@@ -1,4 +1,5 @@
 """Middlewares for the influxdb_metrics app."""
+import os
 import datetime
 import inspect
 import time
@@ -9,11 +10,22 @@ except ImportError:
 
 from django.conf import settings
 
-from tld import get_tld
-from tld.exceptions import TldBadUrl, TldDomainNotFound, TldIOError
-
+from .metrics_utils import METRICS
 from .loader import write_points
 
+
+def _write_metrics(tags, obj, metrics):
+    for m in metrics:
+        attr = getattr(obj, m, None) if hasattr(obj, m) else obj.get(m)
+        value = attr() if callable(attr) else  attr
+        tags[m] = value
+        if METRICS.has_key(m):
+            tags.update(METRICS[m](value))
+
+def _record_campagin(tags, path, keyword)
+    url_query = parse.parse_qs(parse.urlparse(path).query)
+    if keyword in url_query:
+        tags['campagin'] = url_query[keyword][0]
 
 class InfluxDBRequestMiddleware(object):
     """
@@ -34,70 +46,33 @@ class InfluxDBRequestMiddleware(object):
             pass
 
     def process_response(self, request, response):
-        self._record_time(request)
+        self._record_time(request, response)
         return response
 
     def process_exception(self, request, exception):
-        self._record_time(request)
+        self._record_time(request, {'status_code':500})
 
-    def _record_time(self, request):
-        if hasattr(request, '_start_time'):
-            ms = int((time.time() - request._start_time) * 1000)
-            if request.is_ajax():
-                is_ajax = True
-            else:
-                is_ajax = False
+    def _record_time(self, request, response):
+        if not hasattr(request, '_start_time'):
+            return
+        
+        ms = int((time.time() - request._start_time) * 1000)
+        tags = {'host':os.uname()[1]}
+        _write_metrics(tags, request, settings.INFLUXDB_REQUEST_METRICS)
+        _write_metrics(tags, request.META, settings.INFLUXDB_HEADER_METRICS)
+        if response:
+            _write_metrics(tags, response, settings.INFLUXDB_RESPONSE_METRICS)
+            
+        if request.user.is_authenticated():
+            user = request.user
+            _write_metrics(tags, user, settings.INFLUXDB_USER_METRICS)
 
-            is_authenticated = False
-            is_staff = False
-            is_superuser = False
-            if request.user.is_authenticated():
-                is_authenticated = True
-                if request.user.is_staff:
-                    is_staff = True
-                if request.user.is_superuser:
-                    is_superuser = True
+        _record_campagin(tags, request.get_full_path(), settings.INFLUXDB_CAMPAIGN_KEYWORD)
 
-            referer = request.META.get('HTTP_REFERER')
-            referer_tld = None
-            referer_tld_string = ''
-            if referer:
-                try:
-                    referer_tld = get_tld(referer, as_object=True)
-                except (TldBadUrl, TldDomainNotFound, TldIOError):
-                    pass
-            if referer_tld:
-                referer_tld_string = referer_tld.tld
-
-            url = request.get_full_path()
-            url_query = parse.parse_qs(parse.urlparse(url).query)
-
-            # This allows you to measure click rates for ad-campaigns, just
-            # make sure that your ads have `?campaign=something` in the URL
-            campaign_keyword = getattr(
-                settings, 'INFLUXDB_METRICS_CAMPAIGN_KEYWORD', 'campaign')
-            campaign = ''
-            if campaign_keyword in url_query:
-                campaign = url_query[campaign_keyword][0]
-
-            data = [{
-                'measurement': 'django_request',
-                'tags': {
-                    'host': settings.INFLUXDB_TAGS_HOST,
-                    'is_ajax': is_ajax,
-                    'is_authenticated': is_authenticated,
-                    'is_staff': is_staff,
-                    'is_superuser': is_superuser,
-                    'method': request.method,
-                    'module': request._view_module,
-                    'view': request._view_name,
-                    'referer': referer,
-                    'referer_tld': referer_tld_string,
-                    'full_path': url,
-                    'path': request.path,
-                    'campaign': campaign,
-                },
-                'fields': {'value': ms, },
-                'time': datetime.datetime.now().isoformat(),
-            }]
-            write_points(data)
+        data = [{
+            'measurement': 'django_request',
+            'tags': tags,
+            'fields': {'value': ms, },
+            'time': datetime.datetime.utcnow().isoformat()
+        }]
+        write_points(data)
