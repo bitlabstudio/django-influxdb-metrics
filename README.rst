@@ -49,10 +49,6 @@ You need to set the following settings::
     INFLUXDB_PASSWORD = 'yourpassword'
     INFLUXDB_DATABASE = 'yourdatabase'
 
-    # This is for tagging the data sent to your influxdb instance so that you
-    # can query by host
-    INFLUXDB_TAGS_HOST = 'your_hostname'
-
     # Seconds to wait for the request to the influxdb server before timing out
     INFLUXDB_TIMEOUT = 5
 
@@ -61,6 +57,14 @@ You need to set the following settings::
 
     # Set this to True if you are not using Celery
     INFLUXDB_USE_THREADING = False
+
+You can custom metics you want to log::
+
+    INFLUX_REQUEST_METRICS = ['is_ajax', 'method', 'path', '_view_module', '_view_name']
+    INFLUX_USER_METRICS = ['is_authenticated', 'is_staff', 'is_superuser']
+    INFLUX_HEADER_METRICS = ['HTTP_REFERER', "HTTP_USER_AGENT"]
+    INFLUX_RESPONSE_METRICS = ['status_code']
+
 
 If you would like to disable sending of metrics (i.e. for local development),
 you can set::
