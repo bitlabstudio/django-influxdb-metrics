@@ -70,10 +70,17 @@ INSTALLED_APPS = EXTERNAL_APPS + INTERNAL_APPS
 
 SECRET_KEY = 'foobar'
 
-INFLUXDB_HOST = 'example.com'
+INFLUXDB_HOST = 'influxdb'
 INFLUXDB_PORT = '8086'
-INFLUXDB_USER = 'root'
-INFLUXDB_PASSWORD = 'foobar'
+INFLUXDB_USER = 'admin'
+INFLUXDB_PASSWORD = 'test'
 INFLUXDB_DATABASE = 'test'
 INFLUXDB_TAGS_HOST = 'test-host'
 INFLUXDB_TIMEOUT = 3
+
+
+# Internationalization settings
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
+TIME_ZONE = 'Europe/Madrid'

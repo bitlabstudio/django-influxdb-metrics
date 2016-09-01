@@ -1,0 +1,18 @@
+influxdb:
+    image: tutum/influxdb
+    ports: 
+     - "8083:8083"
+     - "8086:8086"
+    environment:
+        PRE_CREATE_DB: "test"
+        INFLUXDB_INIT_PWD: admin
+
+app:
+    build: .
+    links:
+     - influxdb
+    volumes:
+        - ./:/app
+    working_dir: /app
+    command:
+        python runtests.py

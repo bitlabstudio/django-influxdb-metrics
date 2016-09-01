@@ -241,3 +241,16 @@ If you want to contribute to this project, please perform the following steps
     git add . && git commit
     git push -u origin feature_branch
     # Send us a pull request for your feature branch
+
+
+Runing tests
+------------
+
+For running the tests [Docker](https://docs.docker.com/) and 
+[Docker compose](https://www.docker.com/products/docker-compose) is required.
+
+The test setup a Influxdb database for testing against real queries.
+
+In order to run the tests just run the command::
+
+    ./run_tests_with_docker.sh
