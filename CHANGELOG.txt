@@ -1,5 +1,7 @@
 === (ongoing - to be released as 1.4.0) ===
 
+- Added Dockerfile for running tests against a real instance
+
 === 1.3.0 ===
 
 - Prepared app for Django 1.9 and Python 3.5
