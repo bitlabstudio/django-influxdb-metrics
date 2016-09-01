@@ -3,7 +3,7 @@ from django.conf import settings
 
 try:
     from .tasks import write_points as write_points_celery
-except Exception:
+except ImportError:
     write_points_celery = None
 
 from .utils import write_points as write_points_normal
