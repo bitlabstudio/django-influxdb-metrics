@@ -1,7 +1,6 @@
 """Collects the current memory usage and sends it to influxdb."""
-import datetime
-
 from django.conf import settings
+from django.utils import timezone
 from django.core.management.base import BaseCommand, CommandError  # NOQA
 
 from server_metrics.postgresql import get_database_size
@@ -26,7 +25,7 @@ class Command(BaseCommand):
             'measurement': 'postgresql_size',
             'tags': {'host': settings.INFLUXDB_TAGS_HOST, },
             'fields': {'value': total, },
-            'time': datetime.datetime.now().isoformat(),
+            'time': timezone.now().isoformat(),
         }]
         print(data)
         write_points(data)
