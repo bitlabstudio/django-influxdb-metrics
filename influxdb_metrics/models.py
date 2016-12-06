@@ -38,6 +38,8 @@ def user_post_delete_handler(sender, **kwargs):
         'time': timezone.now().isoformat(),
     }]
     write_points(data)
+
+
 post_delete.connect(user_post_delete_handler, sender=settings.AUTH_USER_MODEL)
 
 
@@ -60,4 +62,6 @@ def user_post_save_handler(**kwargs):
             'time': timezone.now().isoformat(),
         }]
         write_points(data)
+
+
 post_save.connect(user_post_save_handler, sender=settings.AUTH_USER_MODEL)

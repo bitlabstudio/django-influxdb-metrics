@@ -12,7 +12,7 @@ from fabric.colors import green, red
 
 if __name__ == '__main__':
     local('flake8 --ignore=E126 --ignore=W391 --statistics'
-          ' --exclude=submodules,south_migrations,migrations,build .')
+          ' --exclude=submodules,south_migrations,migrations,build,.tox .')
     local('coverage run --source="influxdb_metrics" manage.py test -v 2'
           ' --traceback --failfast'
           ' --settings=influxdb_metrics.tests.settings'
