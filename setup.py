@@ -33,7 +33,6 @@ import influxdb_metrics as app
 
 
 install_requires = [
-    'celery>=3.0.0',
     'django>=1.7',
     'influxdb>=2.9.1',
     'tld',
