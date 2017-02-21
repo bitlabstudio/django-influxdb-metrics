@@ -11,8 +11,8 @@ much better way.
 Prerequisites
 -------------
 
-This module has celery as a dependency but you don't have to use it, if you
-don't want to.
+This module has celery support but you don't have to use it, if you don't want
+to.
 
 Installation
 ------------
@@ -246,7 +246,7 @@ If you want to contribute to this project, please perform the following steps
 Runing tests
 ------------
 
-For running the tests [Docker](https://docs.docker.com/) and 
+For running the tests [Docker](https://docs.docker.com/) and
 [Docker compose](https://www.docker.com/products/docker-compose) is required.
 
 The test setup a Influxdb database for testing against real queries.

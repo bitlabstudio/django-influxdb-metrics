@@ -46,6 +46,7 @@ def read(fname):
     except IOError:
         return ''
 
+
 setup(
     name="django-influxdb-metrics",
     version=app.__version__,
