@@ -5,6 +5,10 @@ from django.conf import settings
 
 from influxdb import InfluxDBClient
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def get_client():
     """Returns an ``InfluxDBClient`` instance."""
@@ -37,18 +41,25 @@ def write_points(data, force_disable_threading=False):
       threading at the same time.
 
     """
-    if getattr(settings, 'INFLUXDB_DISABLED', False):
-        return
+    try:
+        if getattr(settings, 'INFLUXDB_DISABLED', False):
+            return
 
-    client = get_client()
-    use_threading = getattr(settings, 'INFLUXDB_USE_THREADING', False)
-    if force_disable_threading:
-        use_threading = False
-    if use_threading is True:
-        thread = Thread(target=write_points_threaded, args=(client, data, ))
-        thread.start()
-    else:
-        client.write_points(data)
+        client = get_client()
+        use_threading = getattr(settings, 'INFLUXDB_USE_THREADING', False)
+        if force_disable_threading:
+            use_threading = False
+        if use_threading is True:
+            thread = Thread(target=write_points_threaded, args=(client, data, ))
+            thread.start()
+        else:
+            client.write_points(data)
+    except Exception as err:
+        if getattr(settings, 'INFLUXDB_FAIL_SILENTLY', True):
+            logger.exception(err.message)
+            pass
+        else:
+            raise err.message
 
 
 def write_points_threaded(client, data):  # pragma: no cover
