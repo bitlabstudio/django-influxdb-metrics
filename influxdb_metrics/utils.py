@@ -1,9 +1,13 @@
 """Utilities for working with influxdb."""
+import logging
 from threading import Thread
 
 from django.conf import settings
 
 from influxdb import InfluxDBClient
+
+
+logger = logging.getLogger(__name__)
 
 
 def get_client():
@@ -45,18 +49,18 @@ def write_points(data, force_disable_threading=False):
     if force_disable_threading:
         use_threading = False
     if use_threading is True:
-        thread = Thread(target=write_points_threaded, args=(client, data, ))
+        thread = Thread(target=process_points, args=(client, data, ))
         thread.start()
     else:
-        client.write_points(data)
+        process_points(client, data)
 
 
-def write_points_threaded(client, data):  # pragma: no cover
+def process_points(client, data):  # pragma: no cover
     """Method to be called via threading module."""
     try:
         client.write_points(data)
     except Exception as err:
         if getattr(settings, 'INFLUXDB_FAIL_SILENTLY', True):
-            pass
+            logger.error(err.message)
         else:
             raise err.message
