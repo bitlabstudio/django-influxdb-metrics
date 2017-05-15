@@ -7,7 +7,11 @@ except ImportError:
     import urlparse as parse
 
 from django.conf import settings
-from django.utils.deprecation import MiddlewareMixin
+try:
+    from django.utils.deprecation import MiddlewareMixin
+except ImportError:
+    class MiddlewareMixin(object):
+        pass
 
 from tld import get_tld
 from tld.exceptions import TldBadUrl, TldDomainNotFound, TldIOError
