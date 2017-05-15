@@ -1,0 +1,15 @@
+machine:
+  services:
+    - docker
+  hosts:
+    influxdb: 127.0.0.1
+
+dependencies:
+  override:
+    - pip install tox tox-pyenv
+    - pyenv local 2.7.12 3.5.2
+
+test:
+  override:
+    - docker run -d -p 8083:8083 -p 8086:8086 -e "PRE_CREATE_DB=test" -e "INFLUXDB_INIT_PWD=admin" tutum/influxdb
+    - tox
