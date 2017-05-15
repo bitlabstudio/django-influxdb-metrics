@@ -7,6 +7,7 @@ except ImportError:
     import urlparse as parse
 
 from django.conf import settings
+from django.utils.deprecation import MiddlewareMixin
 
 from tld import get_tld
 from tld.exceptions import TldBadUrl, TldDomainNotFound, TldIOError
@@ -14,7 +15,7 @@ from tld.exceptions import TldBadUrl, TldDomainNotFound, TldIOError
 from .loader import write_points
 
 
-class InfluxDBRequestMiddleware(object):
+class InfluxDBRequestMiddleware(MiddlewareMixin):
     """
     Measures request time and sends metric to InfluxDB.
 
