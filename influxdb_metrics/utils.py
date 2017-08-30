@@ -63,4 +63,4 @@ def process_points(client, data):  # pragma: no cover
         if getattr(settings, 'INFLUXDB_FAIL_SILENTLY', True):
             logger.error(err)
         else:
-            raise err
+            raise
