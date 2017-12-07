@@ -1,4 +1,6 @@
 """Middlewares for the influxdb_metrics app."""
+
+from django import VERSION as DJANGO_VERSION
 import inspect
 import time
 try:
@@ -17,6 +19,13 @@ from tld import get_tld
 from tld.exceptions import TldBadUrl, TldDomainNotFound, TldIOError
 
 from .loader import write_points
+
+if DJANGO_VERSION < (1, 10):
+    def is_user_authenticated(user):
+        return user.is_authenticated()
+else:
+    def is_user_authenticated(user):
+        return user.is_authenticated
 
 
 class InfluxDBRequestMiddleware(MiddlewareMixin):
@@ -55,7 +64,7 @@ class InfluxDBRequestMiddleware(MiddlewareMixin):
             is_authenticated = False
             is_staff = False
             is_superuser = False
-            if request.user.is_authenticated():
+            if is_user_authenticated(request.user):
                 is_authenticated = True
                 if request.user.is_staff:
                     is_staff = True
