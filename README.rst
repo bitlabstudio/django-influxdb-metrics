@@ -233,7 +233,7 @@ If you want to contribute to this project, please perform the following steps
 
     # Fork this repository
     # Clone your fork
-    mkvirtualenv -p python3.6 django-influxdb-metrics
+    mkvirtualenv -p python3.5 django-influxdb-metrics
     make develop
 
     git co -b feature_branch master

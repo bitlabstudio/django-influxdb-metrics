@@ -1,7 +1,7 @@
 language: python
 python:
-  - "3.6"
-install: 
+  - "3.5"
+install:
   - pip install -r test_requirements.txt --use-mirrors
   - pip install coveralls
 script:
@@ -9,5 +9,5 @@ script:
   - ./runtests.py
   - mv .coverage ../../
   - cd ../../
-after_success: 
+after_success:
   - coveralls

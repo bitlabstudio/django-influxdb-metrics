@@ -1,10 +1,10 @@
-FROM python:3.6
+FROM python:3.5
 
 MAINTAINER Adrián Ribao adrian@adrima.es
 
-# You can force a daily or weekly upgrade of all your 
-# packages changing REFRESHED_AT date, from time to time 
-# otherwise the first lines would be cached by docker and  
+# You can force a daily or weekly upgrade of all your
+# packages changing REFRESHED_AT date, from time to time
+# otherwise the first lines would be cached by docker and
 # you would always use non up-to-date versions of your OS
 
 ENV REFRESHED_AT 2016-05-06-12:00
