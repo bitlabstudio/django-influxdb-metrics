@@ -112,4 +112,8 @@ class InfluxDBRequestMiddleware(MiddlewareMixin):
                 },
                 'fields': {'value': ms, },
             }]
-            write_points(data)
+            try:
+                write_points(data)
+            except Exception as err:
+                pass  # sadly, when using celery, there can be issues with the connection to the MQ. Better to drop the data
+                # than fail the request.
