@@ -2,6 +2,8 @@
 
 - Added Dockerfile for running tests against a real instance
 - Improved util functions
+- Adds try-catch-block around write_points() call in middleware
+  to fail silently and not disrupt the actual request
 
 === 1.3.0 ===
 
