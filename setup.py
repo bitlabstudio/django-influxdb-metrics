@@ -50,7 +50,7 @@ def read(fname):
 setup(
     name="django-influxdb-metrics",
     version=app.__version__,
-    description=read('DESCRIPTION'),
+    description="A reusable Django app that sends metrics about your project to InfluxDB",
     long_description=read('README.rst'),
     license='The MIT License',
     platforms=['OS Independent'],
