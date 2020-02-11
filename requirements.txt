@@ -1,4 +1,4 @@
-django==1.10.5
+django==1.11.28
 influxdb
 tld
 python-server-metrics
