@@ -18,7 +18,7 @@ except ImportError:
 from tld import get_tld
 from tld.exceptions import TldBadUrl, TldDomainNotFound, TldIOError
 
-from .loader import write_points
+from .loader import measurement_name_for, write_points
 
 if DJANGO_VERSION < (1, 10):
     def is_user_authenticated(user):
@@ -94,7 +94,7 @@ class InfluxDBRequestMiddleware(MiddlewareMixin):
                 campaign = url_query[campaign_keyword][0]
 
             data = [{
-                'measurement': 'django_request',
+                'measurement': measurement_name_for('request'),
                 'tags': {
                     'host': settings.INFLUXDB_TAGS_HOST,
                     'is_ajax': is_ajax,
@@ -114,6 +114,8 @@ class InfluxDBRequestMiddleware(MiddlewareMixin):
             }]
             try:
                 write_points(data)
-            except Exception as err:
-                pass  # sadly, when using celery, there can be issues with the connection to the MQ. Better to drop the data
+            except Exception:
+                # sadly, when using celery, there can be issues with
+                # the connection to the MQ. Better to drop the data
                 # than fail the request.
+                pass
