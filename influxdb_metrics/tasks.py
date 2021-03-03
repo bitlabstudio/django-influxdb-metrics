@@ -12,7 +12,7 @@ except ImportError:
 from .utils import write_points as write_points_normal
 
 
-@shared_task
+@shared_task(ignore_result=True)
 def write_points(data, name='influxdb_metrics.tasks.write_points'):
     """
     Wrapper around `utils.write_points`.
