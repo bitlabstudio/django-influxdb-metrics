@@ -3,6 +3,7 @@
 from django import VERSION as DJANGO_VERSION
 import inspect
 import time
+import logging
 try:
     from urllib import parse
 except ImportError:
@@ -26,6 +27,8 @@ if DJANGO_VERSION < (1, 10):
 else:
     def is_user_authenticated(user):
         return user.is_authenticated
+
+logger = logging.getLogger(__name__)
 
 
 class InfluxDBRequestMiddleware(MiddlewareMixin):
@@ -115,5 +118,6 @@ class InfluxDBRequestMiddleware(MiddlewareMixin):
             try:
                 write_points(data)
             except Exception as err:
-                pass  # sadly, when using celery, there can be issues with the connection to the MQ. Better to drop the data
+                logger.exception(err, extra={"request": request})
+                # sadly, when using celery, there can be issues with the connection to the MQ. Better to drop the data
                 # than fail the request.
