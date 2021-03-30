@@ -3,12 +3,14 @@
 from django import VERSION as DJANGO_VERSION
 import inspect
 import time
+import logging
 try:
     from urllib import parse
 except ImportError:
     import urlparse as parse
 
 from django.conf import settings
+from django.core.exceptions import MiddlewareNotUsed
 try:
     from django.utils.deprecation import MiddlewareMixin
 except ImportError:
@@ -27,6 +29,8 @@ else:
     def is_user_authenticated(user):
         return user.is_authenticated
 
+logger = logging.getLogger(__name__)
+
 
 class InfluxDBRequestMiddleware(MiddlewareMixin):
     """
@@ -35,6 +39,12 @@ class InfluxDBRequestMiddleware(MiddlewareMixin):
     Credits go to: https://github.com/andymckay/django-statsd/blob/master/django_statsd/middleware.py#L24  # NOQA
 
     """
+
+    def __init__(self, get_response=None):
+        if getattr(settings, 'INFLUXDB_DISABLED', False):
+            raise MiddlewareNotUsed
+        super().__init__(get_response=get_response)
+
     def process_view(self, request, view_func, view_args, view_kwargs):
         view = view_func
         if not inspect.isfunction(view_func):
@@ -114,8 +124,8 @@ class InfluxDBRequestMiddleware(MiddlewareMixin):
             }]
             try:
                 write_points(data)
-            except Exception:
-                # sadly, when using celery, there can be issues with
-                # the connection to the MQ. Better to drop the data
+            except Exception as err:
+                logger.exception(err, extra={"request": request})
+                # sadly, when using celery, there can be issues with the connection to the MQ. Better to drop the data
                 # than fail the request.
                 pass
