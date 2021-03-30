@@ -80,6 +80,11 @@ Optional with ssl::
 
     INFLUXDB_VERIFY_SSL = True # default is False
 
+Specify a prefix for metric measurement names (default is 'django_', E.g. 'django_request')
+
+    INFLUXDB_PREFIX = "my_app"     # measurement name == 'my_app_request'
+    INFLUXDB_PREFIX = ""           # measurement name == 'request'
+    INFLUXDB_PREFIX = None         # measurement name == 'request'
 
 Usage
 -----

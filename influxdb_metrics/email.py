@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.core.mail.backends.smtp import EmailBackend
 from django.conf import settings
 
-from .loader import write_points
+from .loader import measurement_name_for, write_points
 
 
 class InfluxDbEmailBackend(EmailBackend):
@@ -17,7 +17,7 @@ class InfluxDbEmailBackend(EmailBackend):
             email_messages)
         if num_sent:
             data = [{
-                'measurement': 'django_email_sent',
+                'measurement': measurement_name_for('email_sent'),
                 'tags': {'host': settings.INFLUXDB_TAGS_HOST, },
                 'fields': {'value': num_sent, },
                 'time': timezone.now().isoformat(),
