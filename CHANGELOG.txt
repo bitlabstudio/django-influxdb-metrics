@@ -1,5 +1,6 @@
 === 1.3.X (ongoing - to be released as 1.4.0) ===
 
+- Added MiddlewareNotUsed exception to __init__
 - Added Dockerfile for running tests against a real instance
 - Improved util functions
 - Adds try-catch-block around write_points() call in middleware
