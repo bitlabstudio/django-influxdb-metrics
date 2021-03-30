@@ -4,10 +4,12 @@ from __future__ import absolute_import
 try:
     from celery import shared_task
 except ImportError:
-    def shared_task(func):
-        def wrapper(*args, **kwargs):
-            return func(*args, **kwargs)
-        return wrapper
+    def shared_task(*args, **kwargs):
+        def decorator(func):
+            def wrapper(*args, **kwargs):
+                return func(*args, **kwargs)
+            return wrapper
+        return decorator
 
 from .utils import write_points as write_points_normal
 
