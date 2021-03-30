@@ -31,7 +31,6 @@ import os
 from setuptools import setup, find_packages
 import influxdb_metrics as app
 
-
 install_requires = [
     'django>=1.6',
     'influxdb>=2.9.1',
@@ -50,11 +49,10 @@ def read(fname):
 setup(
     name="django-influxdb-metrics",
     version=app.__version__,
-    description=(
-        "A reusable Django app that sends metrics "
-        "about your project to InfluxDB"
-    ),
-    long_description=read('README.rst'),
+    description=("A reusable Django app that sends metrics "
+                 "about your project to InfluxDB"),
+    long_description_content_type='text/markdown',
+    long_description=read('README.md'),
     license='The MIT License',
     platforms=['OS Independent'],
     keywords='django, app, reusable, metrics, influxdb',
