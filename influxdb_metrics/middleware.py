@@ -9,6 +9,7 @@ except ImportError:
     import urlparse as parse
 
 from django.conf import settings
+from django.core.exceptions import MiddlewareNotUsed
 try:
     from django.utils.deprecation import MiddlewareMixin
 except ImportError:
@@ -35,6 +36,12 @@ class InfluxDBRequestMiddleware(MiddlewareMixin):
     Credits go to: https://github.com/andymckay/django-statsd/blob/master/django_statsd/middleware.py#L24  # NOQA
 
     """
+
+    def __init__(self, get_response=None):
+        if getattr(settings, 'INFLUXDB_DISABLED', False):
+            raise MiddlewareNotUsed
+        super().__init__(get_response=get_response)
+
     def process_view(self, request, view_func, view_args, view_kwargs):
         view = view_func
         if not inspect.isfunction(view_func):
