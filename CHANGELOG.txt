@@ -1,4 +1,6 @@
-=== 1.3.X (ongoing - to be released as 1.4.0) ===
+=== 1.5.X (ongoing) ===
+
+=== 1.4.0 ===
 
 - adds new setting INFLUXDB_PREFIX
 - logging errors when write_points causes an exception
