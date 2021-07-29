@@ -16,71 +16,89 @@ to.
 
 To get the latest stable release from PyPi
 
-.. code-block:: bash
-
-    pip install django-influxdb-metrics
+```bash
+pip install django-influxdb-metrics
+```
 
 To get the latest commit from GitHub
 
-.. code-block:: bash
-
-    pip install -e git+git://github.com/bitmazk/django-influxdb-metrics.git#egg=influxdb_metrics
+```bash
+pip install -e git+git://github.com/bitmazk/django-influxdb-metrics.git#egg=influxdb_metrics
+```
 
 Add `influxdb_metrics` to your `INSTALLED_APPS`
 
-.. code-block:: python
-
-    INSTALLED_APPS = (
-        ...,
-        'influxdb_metrics',
-    )
+```python
+INSTALLED_APPS = (
+    ...,
+    'influxdb_metrics',
+)
+```
 
 ## Settings
 
-You need to set the following settings::
+You need to set the following settings:
 
-    INFLUXDB_HOST = 'your.influxdbhost.com'
-    INFLUXDB_PORT = '8086'
-    INFLUXDB_USER = 'youruser'
-    INFLUXDB_PASSWORD = 'yourpassword'
-    INFLUXDB_DATABASE = 'yourdatabase'
+```python
+INFLUXDB_HOST = 'your.influxdbhost.com'
+INFLUXDB_PORT = '8086'
+INFLUXDB_USER = 'youruser'
+INFLUXDB_PASSWORD = 'yourpassword'
+INFLUXDB_DATABASE = 'yourdatabase'
 
-    # This is for tagging the data sent to your influxdb instance so that you
-    # can query by host
-    INFLUXDB_TAGS_HOST = 'your_hostname'
+# This is for tagging the data sent to your influxdb instance so that you
+# can query by host
+INFLUXDB_TAGS_HOST = 'your_hostname'
 
-    # Seconds to wait for the request to the influxdb server before timing out
-    INFLUXDB_TIMEOUT = 5
+# Seconds to wait for the request to the influxdb server before timing out
+INFLUXDB_TIMEOUT = 5
 
-    # Set this to True if you are using Celery
-    INFLUXDB_USE_CELERY = True
+# Set this to True if you are using Celery
+INFLUXDB_USE_CELERY = True
 
-    # Set this to True if you are not using Celery
-    INFLUXDB_USE_THREADING = False
+# Set this to True if you are not using Celery
+INFLUXDB_USE_THREADING = False
+```
 
 If you would like to disable sending of metrics (i.e. for local development),
-you can set::
+you can set:
 
-    INFLUXDB_DISABLED = True
+```python
+INFLUXDB_DISABLED = True
+```
 
 If you are having trouble getting the postgresql database size, you might need
-to set::
+to set:
 
-    INFLUXDB_POSTGRESQL_USE_LOCALHOST = True
+```python
+INFLUXDB_POSTGRESQL_USE_LOCALHOST = True
+```
 
-Use ssl with INFLUXDB_HOST::
+Use ssl with INFLUXDB_HOST:
 
-    INFLUXDB_SSL = True # default is False
+```python
+INFLUXDB_SSL = True # default is False
+```
 
-Optional with ssl::
+Optional with ssl:
 
-    INFLUXDB_VERIFY_SSL = True # default is False
+```python
+INFLUXDB_VERIFY_SSL = True # default is False
+```
 
 Specify a prefix for metric measurement names (default is `django_`, E.g. `django_request`)
 
-    INFLUXDB_PREFIX = "my_app"     # measurement name == 'my_app_request'
-    INFLUXDB_PREFIX = ""           # measurement name == 'request'
-    INFLUXDB_PREFIX = None         # measurement name == 'request'
+```python
+INFLUXDB_PREFIX = "my_app"     # measurement name == 'my_app_request'
+INFLUXDB_PREFIX = ""           # measurement name == 'request'
+INFLUXDB_PREFIX = None         # measurement name == 'request'
+```
+
+If you want to use Retention policy management:
+
+```python
+INFLUXDB_RETENTION_POLICY = "my_app"  # default is None
+```
 
 ## Usage
 
@@ -91,15 +109,17 @@ crontab.
 
 Collects the total disk usage for the given database.
 
-You can run it like this::
+You can run it like this:
 
-    ./manage.py influxdb_get_postgresql_size db_role db_name
+```bash
+./manage.py influxdb_get_postgresql_size db_role db_name
+```
 
 You should provide role and name for the database you want to measure. Make
 sure that you have a `.pgpass` file in place so that you don't need to enter
 a password for this user.
 
-You could schedule it like this::
+You could schedule it like this:
 
     0 */1 * * * cd /path/to/project/ && /path/to/venv/bin/python /path/to/project/manage.py influxdb_get_postgresql_size db_role db_name > $HOME/mylogs/cron/influxdb-get-postgresql-size.log 2>&1
 
@@ -111,9 +131,11 @@ will have the following fields:
 ### InfluxDbEmailBackend
 
 If you would like to track the number of emails sent, you can set your
-`EMAIL_BACKEND`::
+`EMAIL_BACKEND`:
 
-    EMAIL_BACKEND = 'influxdb_metrics.email.InfluxDbEmailBackend'
+```python
+EMAIL_BACKEND = 'influxdb_metrics.email.InfluxDbEmailBackend'
+```
 
 When the setting is set, metrics will be sent every time you run `.manage.py send_mail`.
 
@@ -125,12 +147,14 @@ and will have the following fields:
 ### InfluxDBRequestMiddleware
 
 If you would like to track the number and speed of all requests, you can add
-the `InfluxDBRequestMiddleware` at the top of your `MIDDLEWARE_CLASSES`::
+the `InfluxDBRequestMiddleware` at the top of your `MIDDLEWARE`:
 
-    MIDDLEWARE_CLASSES = [
-        'influxdb_metrics.middleware.InfluxDBRequestMiddleware',
-        ...
-    ]
+```python
+MIDDLEWARE = [
+    'influxdb_metrics.middleware.InfluxDBRequestMiddleware',
+    ...
+]
+```
 
 The measurement created in your InfluxDB will be named `django.request` and
 will have the following fields:
@@ -202,10 +226,12 @@ The measurement created in your InfluxDB will be named
 ### Making Queries
 
 If you need to get data out of your InfluxDB instance, you can easily do it
-like so::
+like so:
 
+```python
 from influxdb_metrics.utils import query
-query('select \* from series.name', time_precision='s', chunked=False)
+query('select \* from series.name', chunked=False)
+```
 
 The method declaration is the same as the one in `InfluxDBClient.query()`.
 This wrapper simply instanciates a client based on your settings.
@@ -214,18 +240,18 @@ This wrapper simply instanciates a client based on your settings.
 
 If you want to contribute to this project, please perform the following steps
 
-.. code-block:: bash
+```bash
+# Fork this repository
+# Clone your fork
+mkvirtualenv -p python3.5 django-influxdb-metrics
+make develop
 
-    # Fork this repository
-    # Clone your fork
-    mkvirtualenv -p python3.5 django-influxdb-metrics
-    make develop
-
-    git co -b feature_branch master
-    # Implement your feature and tests
-    git add . && git commit
-    git push -u origin feature_branch
-    # Send us a pull request for your feature branch
+git co -b feature_branch master
+# Implement your feature and tests
+git add . && git commit
+git push -u origin feature_branch
+# Send us a pull request for your feature branch
+```
 
 ## Runing tests
 
@@ -234,6 +260,8 @@ For running the tests [Docker](https://docs.docker.com/) and
 
 The test setup a Influxdb database for testing against real queries.
 
-In order to run the tests just run the command::
+In order to run the tests just run the command:
 
-    ./run_tests_with_docker.sh
+```bash
+./run_tests_with_docker.sh
+```

@@ -3,9 +3,7 @@ import logging
 from threading import Thread
 
 from django.conf import settings
-
 from influxdb import InfluxDBClient
-
 
 logger = logging.getLogger(__name__)
 
@@ -24,10 +22,10 @@ def get_client():
     )
 
 
-def query(query):
+def query(query, **kwargs):
     """Wrapper around ``InfluxDBClient.query()``."""
     client = get_client()
-    return client.query(query)
+    return client.query(query, **kwargs)
 
 
 def write_points(data, force_disable_threading=False):
@@ -49,7 +47,7 @@ def write_points(data, force_disable_threading=False):
     if force_disable_threading:
         use_threading = False
     if use_threading is True:
-        thread = Thread(target=process_points, args=(client, data, ))
+        thread = Thread(target=process_points, args=(client, data,))
         thread.start()
     else:
         process_points(client, data)
@@ -58,7 +56,7 @@ def write_points(data, force_disable_threading=False):
 def process_points(client, data):  # pragma: no cover
     """Method to be called via threading module."""
     try:
-        client.write_points(data)
+        client.write_points(data, retention_policy=getattr(settings, 'INFLUXDB_RETENTION_POLICY', None))
     except Exception:
         if getattr(settings, 'INFLUXDB_FAIL_SILENTLY', True):
             logger.exception('Error while writing data points')
